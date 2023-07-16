@@ -43,10 +43,10 @@ def main(args):
                 possible_delimiter=line[m_head.end()-1]
             elif m_tail is not None:
                 possible_placement="poh:email"
-                possible_delimiter=line[m_tail.start()-1]
+                possible_delimiter=line[m_tail.start()]
             elif m_middle is not None:
                 possible_placement="unknown:email:unknown"
-                possible_delimiter=line[m_middle.start()-1]
+                possible_delimiter=line[m_middle.start()]
             elif m_only is not None:
                 possible_placement="email"
                 possible_delimiter="n/a"
