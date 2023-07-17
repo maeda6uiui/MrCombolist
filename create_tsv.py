@@ -21,8 +21,8 @@ def parse_email_poh(line:str,delimiter:str)->dict[str,str]:
         parse_result["result"]="Failure"
         parse_result["error"]="Invalid record"
     else:
-        parse_result["email"]=splits[0].strip().replace("\t","")
-        parse_result["poh"]=splits[1].replace("\t","")
+        parse_result["email"]=splits[0]
+        parse_result["poh"]=splits[1]
         parse_result["result"]="Success"
 
     return parse_result
@@ -40,8 +40,8 @@ def parse_poh_email(line:str,delimiter:str)->dict[str,str]:
         parse_result["result"]="Failure"
         parse_result["error"]="Invalid record"
     else:
-        parse_result["email"]=splits[1].strip().replace("\t","")
-        parse_result["poh"]=splits[0].replace("\t","")
+        parse_result["email"]=splits[1]
+        parse_result["poh"]=splits[0]
         parse_result["result"]="Success"
 
     return parse_result
@@ -60,14 +60,14 @@ def parse_unknown_email_unknown(line:str,delimiter:str,r_email_middle:re.Pattern
         parse_result["error"]="Invalid record"
     else:
         email=m.group().replace(delimiter,"")
-        parse_result["email"]=email.strip().replace("\t","")
+        parse_result["email"]=email
         parse_result["result"]="Success"
 
     return parse_result
 
 def parse_email(line:str)->dict[str,str]:
     return {
-        "email": line.replace("\t",""),
+        "email": line,
         "poh": "",
         "result": "Success",
         "error": ""
