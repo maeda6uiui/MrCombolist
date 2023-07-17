@@ -1,7 +1,5 @@
 import argparse
-import csv
 import json
-import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 
@@ -21,29 +19,34 @@ def main(args):
     if num_input_files%num_tsv_per_concat!=0:
         num_output_files+=1
 
-    for i in tqdm(range(num_output_files)):
-        df_concat=None
-        for j in range(num_tsv_per_concat):
+    for i in range(num_output_files):
+        print(f"{i}/{num_output_files-1}")
+
+        concat_lines=[]
+
+        header="email\tpoh\tinput_filepath_hash\n"
+        concat_lines.append(header)
+
+        for j in tqdm(range(num_tsv_per_concat)):
             parse_info=parse_info_list[i*num_tsv_per_concat+j]
             records_filepath:str=parse_info["records_filepath"]
             input_filepath_hash:str=parse_info["input_filepath_hash"]
 
-            if df_concat is None:
-                df_concat=pd.read_table(records_filepath,quoting=csv.QUOTE_NONE)
-                df_concat["input_filepath_hash"]=input_filepath_hash
-            else:
-                df=pd.read_table(records_filepath,quoting=csv.QUOTE_NONE)
-                df["input_filepath_hash"]=input_filepath_hash
-                df_concat=pd.concat([df_concat,df],axis=0)
+            with open(records_filepath,"r",encoding="utf-8") as r:
+                for line in r:
+                    line=line.strip()
+                    line+=f"\t{input_filepath_hash}\n"
+                    concat_lines.append(line)
 
         output_file=output_dir.joinpath(f"{i}.tsv")
-        df_concat.to_csv(output_file,sep="\t",index=False)
+        with output_file.open("w",encoding="utf-8") as w:
+            w.writelines(concat_lines)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--parse-info-filepath",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-n","--num-tsv-per-concat",type=int,default=500)
+    parser.add_argument("-n","--num-tsv-per-concat",type=int,default=1000)
     args=parser.parse_args()
 
     main(args)
