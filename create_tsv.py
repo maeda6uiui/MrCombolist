@@ -22,7 +22,7 @@ def parse_email_poh(line:str,delimiter:str)->dict[str,str]:
         parse_result["error"]="Invalid record"
     else:
         parse_result["email"]=splits[0].strip().replace("\t","")
-        parse_result["poh"]=splits[1].strip().replace("\t","")
+        parse_result["poh"]=splits[1].replace("\t","")
         parse_result["result"]="Success"
 
     return parse_result
@@ -41,7 +41,7 @@ def parse_poh_email(line:str,delimiter:str)->dict[str,str]:
         parse_result["error"]="Invalid record"
     else:
         parse_result["email"]=splits[1].strip().replace("\t","")
-        parse_result["poh"]=splits[0].strip().replace("\t","")
+        parse_result["poh"]=splits[0].replace("\t","")
         parse_result["result"]="Success"
 
     return parse_result
