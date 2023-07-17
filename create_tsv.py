@@ -131,7 +131,8 @@ def main(args):
 
         #Output records and errors
         input_dirname=input_file.parent.name
-        output_dir=output_root_dir.joinpath(input_dirname)
+        input_dirname_hash=get_md5_hash(input_dirname)
+        output_dir=output_root_dir.joinpath(input_dirname_hash)
         output_dir.mkdir(exist_ok=True)
 
         input_filepath_hash=get_md5_hash(input_filepath)
@@ -153,6 +154,7 @@ def main(args):
         parse_info={
             "input_filepath": input_filepath,
             "input_filepath_hash": input_filepath_hash,
+            "input_dirname_hash": input_dirname_hash,
             "records_filepath": str(records_file),
             "parse_errors_filepath": str(parse_errors_file)
         }
