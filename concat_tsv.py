@@ -7,6 +7,8 @@ def main(args):
     parse_info_filepath:str=args.parse_info_filepath
     output_dirname:str=args.output_dirname
     num_tsv_per_concat:int=args.num_tsv_per_concat
+    start_index:int=args.start_index
+    end_index:int=args.end_index
 
     output_dir=Path(output_dirname)
     output_dir.mkdir(exist_ok=True,parents=True)
@@ -19,7 +21,17 @@ def main(args):
     if num_input_files%num_tsv_per_concat!=0:
         num_output_files+=1
 
+    if start_index is None:
+        start_index=0
+    if end_index is None:
+        end_index=num_output_files+1
+
     for i in range(num_output_files):
+        if i<start_index:
+            continue
+        if i>=end_index:
+            break
+
         print(f"{i}/{num_output_files-1}")
 
         concat_lines=[]
@@ -27,7 +39,8 @@ def main(args):
         header="email\tpoh\tinput_filepath_hash\n"
         concat_lines.append(header)
 
-        for j in tqdm(range(num_tsv_per_concat)):
+        num_tsv_to_concat=num_tsv_per_concat if i<num_output_files-1 else num_input_files%num_tsv_per_concat
+        for j in tqdm(range(num_tsv_to_concat)):
             parse_info=parse_info_list[i*num_tsv_per_concat+j]
             records_filepath:str=parse_info["records_filepath"]
             input_filepath_hash:str=parse_info["input_filepath_hash"]
@@ -47,6 +60,8 @@ if __name__=="__main__":
     parser.add_argument("-i","--parse-info-filepath",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
     parser.add_argument("-n","--num-tsv-per-concat",type=int,default=1000)
+    parser.add_argument("-s","--start-index",type=int)
+    parser.add_argument("-e","--end-index",type=int)
     args=parser.parse_args()
 
     main(args)
