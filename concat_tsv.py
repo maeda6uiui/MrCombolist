@@ -34,7 +34,7 @@ def main(args):
             else:
                 df=pd.read_table(records_filepath,quoting=csv.QUOTE_NONE)
                 df["input_filepath_hash"]=input_filepath_hash
-                df_concat=pd.concat([df_concat,df],axis=1)
+                df_concat=pd.concat([df_concat,df],axis=0)
 
         output_file=output_dir.joinpath(f"{i}.tsv")
         df_concat.to_csv(output_file,sep="\t",index=False)
