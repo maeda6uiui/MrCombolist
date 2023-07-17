@@ -21,8 +21,8 @@ def main(args):
 
         for i in range(1,len(lines)):
             email,poh=lines[i].split("\t",maxsplit=1)
-            email=email.strip().replace("\t","").replace("\0","")
-            poh=poh.replace("\t","").replace("\0","")
+            email=email.strip().replace("\t","")
+            poh=poh.replace("\t","")
 
             cleanup_line=f"{email}\t{poh}\n"
             cleanup_lines.append(cleanup_line)
