@@ -1,4 +1,5 @@
 import argparse
+import csv
 import json
 import pandas as pd
 from pathlib import Path
@@ -28,10 +29,10 @@ def main(args):
             input_filepath_hash:str=parse_info["input_filepath_hash"]
 
             if df_concat is None:
-                df_concat=pd.read_table(records_filepath)
+                df_concat=pd.read_table(records_filepath,quoting=csv.QUOTE_NONE)
                 df_concat["input_filepath_hash"]=input_filepath_hash
             else:
-                df=pd.read_table(records_filepath)
+                df=pd.read_table(records_filepath,quoting=csv.QUOTE_NONE)
                 df["input_filepath_hash"]=input_filepath_hash
                 df_concat=pd.concat([df_concat,df],axis=1)
 
