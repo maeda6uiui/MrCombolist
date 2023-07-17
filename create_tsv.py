@@ -160,7 +160,7 @@ def main(args):
 
     parse_info_file=output_root_dir.joinpath("parse_info.json")
     with parse_info_file.open("w",encoding="utf-8") as w:
-        json.dump(parse_info_list,parse_info_file,ensure_ascii=False,indent=4)
+        json.dump(parse_info_list,w,ensure_ascii=False,indent=4)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
