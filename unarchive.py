@@ -30,8 +30,8 @@ def main(args):
         output_dir=output_root_dir.joinpath(input_filepath_hash)
         output_dir.mkdir(exist_ok=True)
 
-        suffix=Path(input_filepath).suffix
-        if suffix is None:
+        suffixes=Path(input_filepath).suffixes
+        if len(suffixes)==0:
             unarchive_result={
                 "filepath": input_filepath,
                 "filepath_hash": input_filepath_hash,
@@ -42,7 +42,8 @@ def main(args):
 
             continue
 
-        extension=suffix[1:].lower()
+        extension="".join(suffixes)
+        extension=extension[1:]
         if extension not in SHUTIL_SUPPORTED_EXTENSIONS and extension not in EXTRA_SUPPORTED_EXTENSIONS:
             unarchive_result={
                 "filepath": input_filepath,
