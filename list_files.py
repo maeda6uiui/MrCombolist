@@ -10,9 +10,16 @@ def get_md5_hash(value:str)->str:
 def main(args):
     input_root_dirname:str=args.input_root_dirname
     output_filepath:str=args.output_filepath
+    extension:str=args.extension
+
+    pattern=""
+    if extension is None:
+        pattern="**/*"
+    else:
+        pattern=f"**/*.{extension}"
 
     input_root_dir=Path(input_root_dirname)
-    input_files=list(input_root_dir.glob("**/*"))
+    input_files=list(input_root_dir.glob(pattern))
     input_files=[x for x in input_files if x.is_file()]
 
     file_info_list=[]
@@ -30,6 +37,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-root-dirname",type=str)
     parser.add_argument("-o","--output-filepath",type=str)
+    parser.add_argument("-e","--extension",type=str)
     args=parser.parse_args()
 
     main(args)
