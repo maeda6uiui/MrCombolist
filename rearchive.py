@@ -7,12 +7,18 @@ from tqdm import tqdm
 def main(args):
     file_list_filepath:str=args.file_list_filepath
     output_dirname:str=args.output_dirname
+    start_index:int=args.start_index
 
     with open(file_list_filepath,"r",encoding="utf-8") as r:
         file_info_list:list[dict]=json.load(r)
 
     output_dir=Path(output_dirname)
     output_dir.mkdir(exist_ok=True,parents=True)
+
+    if start_index is None:
+        start_index=0
+
+    file_info_list=file_info_list[start_index:]
 
     for file_info in tqdm(file_info_list):
         input_filepath:str=file_info["filepath"]
@@ -34,6 +40,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--file-list-filepath",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
+    parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
     
     main(args)

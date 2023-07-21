@@ -8,7 +8,6 @@ def main(args):
     output_dirname:str=args.output_dirname
     num_tsv_per_concat:int=args.num_tsv_per_concat
     start_index:int=args.start_index
-    end_index:int=args.end_index
 
     output_dir=Path(output_dirname)
     output_dir.mkdir(exist_ok=True,parents=True)
@@ -23,15 +22,8 @@ def main(args):
 
     if start_index is None:
         start_index=0
-    if end_index is None:
-        end_index=num_output_files+1
 
-    for i in range(num_output_files):
-        if i<start_index:
-            continue
-        if i>=end_index:
-            break
-
+    for i in range(start_index,num_output_files):
         print(f"{i}/{num_output_files-1}")
 
         concat_lines=[]
@@ -61,7 +53,6 @@ if __name__=="__main__":
     parser.add_argument("-o","--output-dirname",type=str)
     parser.add_argument("-n","--num-tsv-per-concat",type=int,default=1000)
     parser.add_argument("-s","--start-index",type=int)
-    parser.add_argument("-e","--end-index",type=int)
     args=parser.parse_args()
 
     main(args)
