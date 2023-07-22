@@ -1,4 +1,5 @@
 import argparse
+import gzip
 import json
 import re
 from collections import Counter
@@ -11,7 +12,7 @@ def main(args):
     delimiter_candidates:str=args.delimiter_candidates
 
     input_root_dir=Path(input_root_dirname)
-    input_files=list(input_root_dir.glob("**/*.txt"))
+    input_files=list(input_root_dir.glob("**/*.txt"))+list(input_root_dir.glob("**/*.txt.gz"))
 
     r_email_head=re.compile(r"^\S+@\S+\.\S+"+f"[{delimiter_candidates}]")
     r_email_tail=re.compile(f"[{delimiter_candidates}]+"+r"\S+@\S+\.\S+$")
@@ -20,8 +21,15 @@ def main(args):
 
     detection_results=[]
     for input_file in tqdm(input_files):
-        with input_file.open("r",encoding="utf-8",errors="ignore") as r:
-            lines=r.read().splitlines()
+        lines=None
+        if input_file.suffix==".txt":
+            with input_file.open("r",encoding="utf-8",errors="ignore") as r:
+                lines=r.read().splitlines()
+        elif input_file.suffix==".gz":
+            with gzip.open(input_file,"rt",encoding="utf-8",errors="ignore") as r:
+                lines=r.read().splitlines()
+        else:
+            raise RuntimeError(f"Unsupported suffix: {input_file.suffix}")
 
         #Remove extra spaces
         lines=[line.strip() for line in lines]

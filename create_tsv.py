@@ -1,5 +1,6 @@
 import argparse
 import hashlib
+import gzip
 import json
 import re
 from pathlib import Path
@@ -94,8 +95,15 @@ def main(args):
 
         r_email_middle=re.compile(f"[{delimiter}]+"+r"\S+@\S+\.\S+"+f"[{delimiter}]")
 
-        with input_file.open("r",encoding="utf-8",errors="replace") as r:
-            lines=r.read().splitlines()
+        lines=None
+        if input_file.suffix==".txt":
+            with input_file.open("r",encoding="utf-8",errors="replace") as r:
+                lines=r.read().splitlines()
+        elif input_file.suffix==".gz":
+            with gzip.open(input_file,"rt",encoding="utf-8",errors="replace") as r:
+                lines=r.read().splitlines()
+        else:
+            raise RuntimeError(f"Unsupported suffix: {input_file.suffix}")
 
         #Remove extra spaces
         lines=[line.strip() for line in lines]
