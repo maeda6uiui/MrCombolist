@@ -32,7 +32,7 @@ def main(args):
             lines=r.read().splitlines()
 
         output_file=output_dir.joinpath(f"{input_filepath_hash}.txt.gz")
-        with gzip.open(str(output_file),"wt",encoding="utf-8") as wt:
+        with gzip.open(output_file,"wt",encoding="utf-8") as wt:
             for line in lines:
                 wt.write(f"{line}\n")
 
