@@ -77,7 +77,11 @@ def parse_email(line:str)->dict[str,str]:
 def main(args):
     schema_detection_results_filepath:str=args.schema_detection_results_filepath
     output_root_dirname:str=args.output_root_dirname
+    output_dirname_type:str=args.output_dirname_type
     start_index:int=args.start_index
+
+    if output_dirname_type not in ["parent","stem"]:
+        raise RuntimeError(f"Unsupported output dirname type: {output_dirname_type}")
 
     output_root_dir=Path(output_root_dirname)
     output_root_dir.mkdir(exist_ok=True,parents=True)
@@ -141,12 +145,21 @@ def main(args):
                 }
                 records.append(record)
 
-        #Output records and errors
-        input_dirname=input_file.parent.name
-        input_dirname_hash=get_md5_hash(input_dirname)
-        output_dir=output_root_dir.joinpath(input_dirname_hash)
+        #Create output directory
+        output_dir=None
+        input_dirname_hash=""
+        input_file_stem=""
+        if output_dirname_type=="parent":
+            input_dirname=input_file.parent.name
+            input_dirname_hash=get_md5_hash(input_dirname)
+            output_dir=output_root_dir.joinpath(input_dirname_hash)
+        elif output_dirname_type=="stem":
+            input_file_stem=input_file.stem
+            output_dir=output_root_dir.joinpath(input_file_stem)
+        
         output_dir.mkdir(exist_ok=True)
 
+        #Output records and errors
         input_filepath_hash=get_md5_hash(input_filepath)
         records_file=output_dir.joinpath(f"{input_filepath_hash}.tsv")
         parse_errors_file=output_dir.joinpath(f"{input_filepath_hash}_errors.json")
@@ -166,10 +179,14 @@ def main(args):
         parse_info={
             "input_filepath": input_filepath,
             "input_filepath_hash": input_filepath_hash,
-            "input_dirname_hash": input_dirname_hash,
             "records_filepath": str(records_file),
             "parse_errors_filepath": str(parse_errors_file)
         }
+        if output_dirname_type=="parent":
+            parse_info["input_dirname_hash"]=input_dirname_hash
+        elif output_dirname_type=="stem":
+            parse_info["input_file_stem"]=input_file_stem
+
         parse_info_list.append(parse_info)
 
     parse_info_file=output_root_dir.joinpath("parse_info.json")
@@ -180,6 +197,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--schema-detection-results-filepath",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
+    parser.add_argument("-t","--output-dirname-type",type=str,default="stem")
     parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
 
