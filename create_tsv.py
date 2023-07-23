@@ -154,7 +154,7 @@ def main(args):
             input_dirname_hash=get_md5_hash(input_dirname)
             output_dir=output_root_dir.joinpath(input_dirname_hash)
         elif output_dirname_type=="stem":
-            input_file_stem=input_file.stem
+            input_file_stem=input_file.name.split(".",1)[0]
             output_dir=output_root_dir.joinpath(input_file_stem)
         
         output_dir.mkdir(exist_ok=True)
