@@ -38,7 +38,10 @@ def main(args):
             input_filepath_hash:str=parse_info["input_filepath_hash"]
 
             with open(records_filepath,"r",encoding="utf-8") as r:
-                for line in r:
+                for idx,line in enumerate(r):
+                    if idx==0:
+                        continue
+
                     line=line.strip()
                     line+=f"\t{input_filepath_hash}\n"
                     concat_lines.append(line)
