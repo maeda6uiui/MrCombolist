@@ -15,7 +15,16 @@ def main(args):
     output_dir.mkdir(exist_ok=True,parents=True)
 
     for tsv_file in tqdm(tsv_files):
-        df=pd.read_table(tsv_file,encoding="utf-8",quoting=csv.QUOTE_NONE)
+        df=pd.read_table(
+            tsv_file,
+            encoding="utf-8",
+            quoting=csv.QUOTE_NONE,
+            dtype={
+                "email": str,
+                "poh": str,
+                "input_filepath_hash": str
+            }
+        )
 
         parquet_file=output_dir.joinpath(f"{tsv_file.stem}.parquet")
         df.to_parquet(parquet_file,index=False)
