@@ -78,6 +78,7 @@ def main(args):
     schema_detection_results_filepath:str=args.schema_detection_results_filepath
     output_root_dirname:str=args.output_root_dirname
     output_dirname_type:str=args.output_dirname_type
+    start_index:int=args.start_index
 
     if output_dirname_type not in ["parent","stem"]:
         raise RuntimeError(f"Unsupported output dirname type: {output_dirname_type}")
@@ -87,6 +88,9 @@ def main(args):
 
     with open(schema_detection_results_filepath,"r",encoding="utf-8") as r:
         schema_detection_results=json.load(r)
+
+    if start_index is not None:
+        schema_detection_results=schema_detection_results[start_index:]
 
     parse_info_list=[]
     for schema_detection_result in tqdm(schema_detection_results):
@@ -194,6 +198,7 @@ if __name__=="__main__":
     parser.add_argument("-i","--schema-detection-results-filepath",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
     parser.add_argument("-t","--output-dirname-type",type=str,default="stem")
+    parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
 
     main(args)
