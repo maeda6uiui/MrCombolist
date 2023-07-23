@@ -1,2 +1,3 @@
 venv
 Bin
+/cleanup_progress.txt
