@@ -77,12 +77,16 @@ def parse_email(line:str)->dict[str,str]:
 def main(args):
     schema_detection_results_filepath:str=args.schema_detection_results_filepath
     output_root_dirname:str=args.output_root_dirname
+    start_index:int=args.start_index
 
     output_root_dir=Path(output_root_dirname)
     output_root_dir.mkdir(exist_ok=True,parents=True)
 
     with open(schema_detection_results_filepath,"r",encoding="utf-8") as r:
         schema_detection_results=json.load(r)
+
+    if start_index is not None:
+        schema_detection_results=schema_detection_results[start_index:]
 
     parse_info_list=[]
     for schema_detection_result in tqdm(schema_detection_results):
@@ -176,6 +180,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--schema-detection-results-filepath",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
+    parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
 
     main(args)
