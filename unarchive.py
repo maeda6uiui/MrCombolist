@@ -43,7 +43,7 @@ def main(args):
             continue
 
         extension="".join(suffixes)
-        extension=extension[1:]
+        extension=extension[1:].lower()
         if extension not in SHUTIL_SUPPORTED_EXTENSIONS and extension not in EXTRA_SUPPORTED_EXTENSIONS:
             unarchive_result={
                 "filepath": input_filepath,

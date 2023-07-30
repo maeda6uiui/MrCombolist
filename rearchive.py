@@ -24,7 +24,7 @@ def main(args):
         input_filepath:str=file_info["filepath"]
         input_filepath_hash:str=file_info["filepath_hash"]
 
-        extension=Path(input_filepath).suffix[1:]
+        extension=Path(input_filepath).suffix[1:].lower()
         if extension!="txt":
             raise RuntimeError(f"Unsupported file extension: {extension}")
 
