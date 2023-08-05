@@ -7,29 +7,41 @@ from pathlib import Path
 from tqdm import tqdm
 
 def main(args):
-    input_root_dirname:str=args.input_root_dirname
-    output_filepath:str=args.output_filepath
+    file_list_filepath:str=args.file_list_filepath
+    output_dirname:str=args.output_dirname
     delimiter_candidates:str=args.delimiter_candidates
+    start_index:int=args.start_index
 
-    input_root_dir=Path(input_root_dirname)
-    input_files=list(input_root_dir.glob("**/*.txt"))+list(input_root_dir.glob("**/*.txt.gz"))
+    with open(file_list_filepath,"r",encoding="utf-8") as r:
+        file_info_list:list[dict]=json.load(r)
+
+    if start_index is not None:
+        file_info_list=file_info_list[start_index:]
+
+    output_dir=Path(output_dirname)
+    output_dir.mkdir(exist_ok=True,parents=True)
 
     r_email_head=re.compile(r"^\S+@\S+\.\S+"+f"[{delimiter_candidates}]")
     r_email_tail=re.compile(f"[{delimiter_candidates}]+"+r"\S+@\S+\.\S+$")
     r_email_middle=re.compile(f"[{delimiter_candidates}]+"+r"\S+@\S+\.\S+"+f"[{delimiter_candidates}]")
     r_email_only=re.compile(r"^\S+@\S+\.\S+$")
 
-    detection_results=[]
-    for input_file in tqdm(input_files):
+    for file_info in tqdm(file_info_list):
+        input_filepath:str=file_info["filepath"]
+        input_filepath_hash:str=file_info["filepath_hash"]
+
+        input_file=Path(input_filepath)
+        extension=input_file.suffix[1:].lower()
+
         lines=None
-        if input_file.suffix==".txt":
+        if extension=="txt":
             with input_file.open("r",encoding="utf-8",errors="ignore") as r:
                 lines=r.read().splitlines()
-        elif input_file.suffix==".gz":
+        elif extension=="gz":
             with gzip.open(input_file,"rt",encoding="utf-8",errors="ignore") as r:
                 lines=r.read().splitlines()
         else:
-            raise RuntimeError(f"Unsupported suffix: {input_file.suffix}")
+            raise RuntimeError(f"Unsupported extension: {extension}")
 
         #Remove extra spaces
         lines=[line.strip() for line in lines]
@@ -85,16 +97,17 @@ def main(args):
             "filepath": str(input_file),
             "schema": schema
         }
-        detection_results.append(detection_result)
-
-    with open(output_filepath,"w",encoding="utf-8") as w:
-        json.dump(detection_results,w,ensure_ascii=False,indent=4)
+        
+        output_file=output_dir.joinpath(f"{input_filepath_hash}.json")
+        with output_file.open("w",encoding="utf-8") as w:
+            json.dump(detection_result,w,ensure_ascii=False,indent=4)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument("-i","--input-root-dirname",type=str)
-    parser.add_argument("-o","--output-filepath",type=str)
+    parser.add_argument("-i","--file-list-filepath",type=str)
+    parser.add_argument("-o","--output-dirname",type=str)
     parser.add_argument("-d","--delimiter-candidates",type=str,default=":;|, \t")
+    parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
 
     main(args)
