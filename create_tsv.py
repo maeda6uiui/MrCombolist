@@ -92,6 +92,7 @@ def main(args):
     for schema_detection_result in tqdm(schema_detection_results):
         input_filepath=schema_detection_result["filepath"]
         input_file=Path(input_filepath)
+        extension=input_file.suffix[1:].lower()
 
         schema=schema_detection_result["schema"]
         placement:str=schema["placement"]
@@ -99,23 +100,19 @@ def main(args):
 
         r_email_middle=re.compile(f"[{delimiter}]+"+r"\S+@\S+\.\S+"+f"[{delimiter}]")
 
-        lines=None
-        if input_file.suffix==".txt":
-            with input_file.open("r",encoding="utf-8",errors="replace") as r:
-                lines=r.read().splitlines()
-        elif input_file.suffix==".gz":
-            with gzip.open(input_file,"rt",encoding="utf-8",errors="replace") as r:
-                lines=r.read().splitlines()
+        fp=None
+        if extension=="txt":
+            fp=input_file.open("r",encoding="utf-8",errors="replace")
+        elif extension=="gz":
+            fp=gzip.open(input_file,"rt",encoding="utf-8",errors="replace")
         else:
-            raise RuntimeError(f"Unsupported suffix: {input_file.suffix}")
+            raise RuntimeError(f"Unsupported extension: {extension}")
 
-        #Remove extra spaces
-        lines=[line.strip() for line in lines]
-
-        #Get email and poh
         records=[]
         parse_errors=[]
-        for idx,line in enumerate(lines):
+        for idx,line in enumerate(fp):
+            line=line.strip()
+
             parse_result=None
             if placement=="email:poh":
                 parse_result=parse_email_poh(line,delimiter)
@@ -141,12 +138,12 @@ def main(args):
                 }
                 records.append(record)
 
-        #Create output directory
+        fp.close()
+
         input_file_stem=input_file.name.split(".",1)[0]
         output_dir=output_root_dir.joinpath(input_file_stem)
         output_dir.mkdir(exist_ok=True)
 
-        #Output records and errors
         input_filepath_hash=get_md5_hash(input_filepath)
         records_file=output_dir.joinpath(f"{input_filepath_hash}.tsv")
         parse_errors_file=output_dir.joinpath(f"{input_filepath_hash}_errors.json")
