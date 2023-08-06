@@ -34,21 +34,25 @@ def main(args):
         input_file=Path(input_filepath)
         extension=input_file.suffix[1:].lower()
 
-        lines=None
+        lines=[]
         if extension=="txt":
             with input_file.open("r",encoding="utf-8",errors="ignore") as r:
-                lines=r.read().splitlines()
+                for idx,line in enumerate(r):
+                    if idx>max_num_lines:
+                        break
+
+                    line=line.strip()
+                    lines.append(line)
         elif extension=="gz":
             with gzip.open(input_file,"rt",encoding="utf-8",errors="ignore") as r:
-                lines=r.read().splitlines()
+                for idx,line in enumerate(r):
+                    if idx>max_num_lines:
+                        break
+
+                    line=line.strip()
+                    lines.append(line)
         else:
             raise RuntimeError(f"Unsupported extension: {extension}")
-        
-        #Limit number of lines to analyze
-        lines=lines[:max_num_lines]
-
-        #Remove extra spaces
-        lines=[line.strip() for line in lines]
 
         #Detect placement and delimiter
         possible_placements=[]
