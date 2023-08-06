@@ -11,6 +11,7 @@ def main(args):
     output_dirname:str=args.output_dirname
     delimiter_candidates:str=args.delimiter_candidates
     start_index:int=args.start_index
+    max_num_lines:int=args.max_num_lines
 
     with open(file_list_filepath,"r",encoding="utf-8") as r:
         file_info_list:list[dict]=json.load(r)
@@ -42,6 +43,9 @@ def main(args):
                 lines=r.read().splitlines()
         else:
             raise RuntimeError(f"Unsupported extension: {extension}")
+        
+        #Limit number of lines to analyze
+        lines=lines[:max_num_lines]
 
         #Remove extra spaces
         lines=[line.strip() for line in lines]
@@ -108,6 +112,7 @@ if __name__=="__main__":
     parser.add_argument("-o","--output-dirname",type=str)
     parser.add_argument("-d","--delimiter-candidates",type=str,default=":;|, \t")
     parser.add_argument("-s","--start-index",type=int)
+    parser.add_argument("-n","--max-num-lines",type=int,default=1000000)
     args=parser.parse_args()
 
     main(args)
