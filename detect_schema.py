@@ -12,6 +12,7 @@ def main(args):
     delimiter_candidates:str=args.delimiter_candidates
     start_index:int=args.start_index
     max_num_lines:int=args.max_num_lines
+    max_line_length:int=args.max_line_length
 
     with open(file_list_filepath,"r",encoding="utf-8") as r:
         file_info_list:list[dict]=json.load(r)
@@ -48,6 +49,7 @@ def main(args):
                 break
 
             line=line.strip()
+            line=line[:max_line_length]
             lines.append(line)
 
         fp.close()
@@ -114,6 +116,7 @@ if __name__=="__main__":
     parser.add_argument("-d","--delimiter-candidates",type=str,default=":;|, \t")
     parser.add_argument("-s","--start-index",type=int)
     parser.add_argument("-n","--max-num-lines",type=int,default=1000000)
+    parser.add_argument("-l","--max-line-length",type=int,default=200)
     args=parser.parse_args()
 
     main(args)

@@ -78,6 +78,7 @@ def main(args):
     schema_detection_results_filepath:str=args.schema_detection_results_filepath
     output_root_dirname:str=args.output_root_dirname
     start_index:int=args.start_index
+    max_line_length:int=args.max_line_length
 
     output_root_dir=Path(output_root_dirname)
     output_root_dir.mkdir(exist_ok=True,parents=True)
@@ -112,6 +113,7 @@ def main(args):
         parse_errors=[]
         for idx,line in enumerate(fp):
             line=line.strip()
+            line=line[:max_line_length]
 
             parse_result=None
             if placement=="email:poh":
@@ -179,6 +181,7 @@ if __name__=="__main__":
     parser.add_argument("-i","--schema-detection-results-filepath",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
     parser.add_argument("-s","--start-index",type=int)
+    parser.add_argument("-l","--max-line-length",type=int,default=200)
     args=parser.parse_args()
 
     main(args)
