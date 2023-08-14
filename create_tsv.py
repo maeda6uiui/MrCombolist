@@ -89,7 +89,6 @@ def main(args):
     if start_index is not None:
         schema_detection_results=schema_detection_results[start_index:]
 
-    parse_info_list=[]
     for schema_detection_result in tqdm(schema_detection_results):
         input_filepath=schema_detection_result["filepath"]
         input_file=Path(input_filepath)
@@ -161,20 +160,6 @@ def main(args):
 
         with parse_errors_file.open("w",encoding="utf-8") as w:
             json.dump(parse_errors,w,ensure_ascii=False,indent=4)
-
-        parse_info={
-            "input_filepath": input_filepath,
-            "input_filepath_hash": input_filepath_hash,
-            "input_file_stem": input_file_stem,
-            "records_filepath": str(records_file),
-            "parse_errors_filepath": str(parse_errors_file)
-        }
-
-        parse_info_list.append(parse_info)
-
-    parse_info_file=output_root_dir.joinpath("parse_info.json")
-    with parse_info_file.open("w",encoding="utf-8") as w:
-        json.dump(parse_info_list,w,ensure_ascii=False,indent=4)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
