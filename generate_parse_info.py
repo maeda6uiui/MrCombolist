@@ -9,9 +9,10 @@ def get_md5_hash(value:str)->str:
 
 def main(args):
     schema_detection_results_filepath:str=args.schema_detection_results_filepath
-    output_root_dirname:str=args.output_root_dirname
+    processed_root_dirname:str=args.processed_root_dirname
+    output_filepath:str=args.output_filepath
 
-    output_root_dir=Path(output_root_dirname)
+    processed_root_dir=Path(processed_root_dirname)
 
     with open(schema_detection_results_filepath,"r",encoding="utf-8") as r:
         schema_detection_results=json.load(r)
@@ -22,11 +23,11 @@ def main(args):
         input_file=Path(input_filepath)
         
         input_file_stem=input_file.name.split(".",1)[0]
-        output_dir=output_root_dir.joinpath(input_file_stem)
+        processed_dir=processed_root_dir.joinpath(input_file_stem)
 
         input_filepath_hash=get_md5_hash(input_filepath)
-        records_file=output_dir.joinpath(f"{input_filepath_hash}.tsv")
-        parse_errors_file=output_dir.joinpath(f"{input_filepath_hash}_errors.json")
+        records_file=processed_dir.joinpath(f"{input_filepath_hash}.tsv")
+        parse_errors_file=processed_dir.joinpath(f"{input_filepath_hash}_errors.json")
 
         parse_info={
             "input_filepath": input_filepath,
@@ -38,14 +39,14 @@ def main(args):
 
         parse_info_list.append(parse_info)
 
-    parse_info_file=output_root_dir.joinpath("parse_info.json")
-    with parse_info_file.open("w",encoding="utf-8") as w:
+    with open(output_filepath,"w",encoding="utf-8") as w:
         json.dump(parse_info_list,w,ensure_ascii=False,indent=4)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument("-i","--schema-detection-results-filepath",type=str)
-    parser.add_argument("-o","--output-root-dirname",type=str)
+    parser.add_argument("-s","--schema-detection-results-filepath",type=str)
+    parser.add_argument("-p","--processed-root-dirname",type=str)
+    parser.add_argument("-o","--output-filepath",type=str)
     args=parser.parse_args()
 
     main(args)
