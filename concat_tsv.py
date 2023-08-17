@@ -54,7 +54,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--parse-info-filepath",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-n","--num-tsv-per-concat",type=int,default=1000)
+    parser.add_argument("-n","--num-tsv-per-concat",type=int,default=200)
     parser.add_argument("-s","--start-index",type=int)
     args=parser.parse_args()
 
