@@ -1,0 +1,25 @@
+version: 1
+disable_existing_loggers: false
+formatters:
+  short: "%(levelname)s - %(message)s"
+  long: "%(asctime)s %(levelname)s %(name)s - %(message)s"
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: short
+    stream: ext://sys.stdout
+  file:
+    class: logging.handlers.RotatingFileHandler
+    formatter: long
+    filename: ./Log/mr_combolist.log
+    maxBytes: 1048576
+    backupCount: 10
+loggers:
+  __main__: 
+    level: INFO
+    handlers:
+      - console
+      - file
+    propagate: false
+root:
+  level: INFO
