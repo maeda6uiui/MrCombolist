@@ -128,7 +128,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-root-dirname",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
-    parser.add_argument("-u","--unarchive-log-dirname",type=str)
+    parser.add_argument("-l","--unarchive-log-dirname",type=str)
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
     parser.add_argument("--unrar-tool-filepath",type=str,default="./Bin/UnRAR.exe")
