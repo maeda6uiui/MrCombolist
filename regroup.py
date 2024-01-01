@@ -9,11 +9,26 @@ class PartitionInfo(object):
         self.filename=""
         self.start_line_index=-1    #Inclusive
         self.end_line_index=-1  #Exclusive
+
+    def to_dict(self)->dict:
+        return {
+            "filename": self.filename,
+            "range": {
+                "start": self.start_line_index,
+                "end": self.end_line_index
+            }
+        }
     
 class GroupInfo(object):
     def __init__(self):
         self.num_lines=-1
         self.partitions:list[PartitionInfo]=[]
+
+    def to_dict(self)->dict:
+        return {
+            "num_lines": self.num_lines,
+            "partitions": [v.to_dict() for v in self.partitions]
+        }
 
 def main(args):
     input_dirname:str=args.input_dirname
@@ -91,7 +106,7 @@ def main(args):
         #Output group info to a log file
         regrouping_log_file=regrouping_log_dir.joinpath(f"{i}.json")
         with regrouping_log_file.open("w",encoding="utf-8") as w:
-            json.dump(group_info,w,ensure_ascii=False)
+            json.dump(group_info.to_dict(),w,ensure_ascii=False)
 
     logger.info("Finished regrouping the files")
 
