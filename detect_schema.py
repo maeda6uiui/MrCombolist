@@ -137,7 +137,7 @@ if __name__=="__main__":
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-l","--schema-detection-log-dirname",type=str)
     parser.add_argument("-d","--delimiter-candidates",type=str,default=":;|, \t")
-    parser.add_argument("--max-num-lines",type=int,default=1000000)
+    parser.add_argument("--max-num-lines",type=int,default=10000000)
     parser.add_argument("--max-line-length",type=int,default=200)
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
