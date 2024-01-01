@@ -87,7 +87,7 @@ def main(args):
     #Unarchive the files
     logger.info("Start unarchiving the files...")
     for idx,input_file in enumerate(input_files):
-        logger.info(f"Processing '{str(input_file)}' ({idx+1}/{len(input_files)+1})")
+        logger.info(f"Processing '{str(input_file)}' ({idx+1}/{len(input_files)})")
 
         #Create a directory to unarchive the file to
         uuid4_str=str(uuid.uuid4())
