@@ -40,15 +40,8 @@ def main(args):
     flattening_results:list[dict]=[]
 
     for idx,input_file in enumerate(tqdm(input_files)):
-        #The format of the output filename is "{idx}.{original_file_extension}"
-        extension="".join(input_file.suffixes)  #This contains a leading dot
-        if len(extension)==0:
-            logger.warn(f"File #{idx} ({str(input_file)}) does not have any suffixes")
-
-        output_filename=f"{idx}{extension}"
-        output_file=output_dir.joinpath(output_filename)
-
         #Copy the file
+        output_file=output_dir.joinpath(f"{idx}.txt")
         shutil.copy(input_file,output_file)
 
         #Store the correspondence of the input and the output files
