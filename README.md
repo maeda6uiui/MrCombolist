@@ -1,6 +1,6 @@
 # MrCombolist
 
-> Once you walk off the paved leafy avenue and step into a back alley of the Internet, you'll find yourself in a place of detraction and calumny.
+> Once you walk off the paved leafy avenue and step into a back alley of the Internet, you'll find yourself in shambles.
 > But I find joy in collecting some craps out there, polishing them at home, and then decorating my petty shelf with them.
 
 ## Overview
