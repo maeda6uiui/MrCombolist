@@ -12,6 +12,10 @@ class ParseResult(object):
         self.email=""
         self.poh=""
 
+    def strip(self):
+        self.email=self.email.strip()
+        self.poh=self.poh.strip()
+
     def to_dict(self)->dict:
         return {
             "error": self.error,
@@ -128,6 +132,7 @@ def main(args):
                 else:
                     parse_result.error=True
 
+                parse_result.strip()
                 parse_results.append(parse_result)
 
         #Create a directory to output parsing results
