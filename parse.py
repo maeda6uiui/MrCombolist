@@ -131,7 +131,8 @@ def main(args):
                 parse_results.append(parse_result)
 
         #Create a directory to output parsing results
-        output_dir=output_root_dir.joinpath(input_file.stem)
+        input_basename=input_file.name.split(".")[0]
+        output_dir=output_root_dir.joinpath(input_basename)
         output_dir.mkdir(exist_ok=True)
 
         #Output parsed records to as a TSV file
