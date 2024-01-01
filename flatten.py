@@ -20,9 +20,12 @@ def main(args):
     logger=getLogger(__name__)
     logger.debug(args)
 
-    #Get list of all files in the input directory
+    #Get list of all "text" files in the input directory
+    #AFAIK, most combolists are comprised of text files,
+    #but you may want some extra processing in case the combolist
+    #contains other formats of data, such as JSON and SQL
     input_root_dir=Path(input_root_dirname)
-    input_files=input_root_dir.glob("**/*")
+    input_files=input_root_dir.glob("**/*.txt")
     input_files=[f for f in input_files if f.is_file()]
 
     logger.info(f"{len(input_files)} files exist in the input directory")
