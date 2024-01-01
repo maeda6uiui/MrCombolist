@@ -1,46 +1,60 @@
 import argparse
 import gzip
-import json
+import yaml
+from logging import getLogger,config
 from pathlib import Path
-from tqdm import tqdm
 
 def main(args):
-    file_list_filepath:str=args.file_list_filepath
+    input_dirname:str=args.input_dirname
     output_dirname:str=args.output_dirname
     start_index:int=args.start_index
+    end_index:int=args.end_index
 
-    with open(file_list_filepath,"r",encoding="utf-8") as r:
-        file_info_list:list[dict]=json.load(r)
+    #Set up logger
+    with open("./logging_config.yaml","r",encoding="utf-8") as r:
+        logging_config=yaml.safe_load(r)
+    
+    config.dictConfig(logging_config)
 
+    logger=getLogger(__name__)
+    logger.debug(args)
+
+    #Get all text files in the input directory
+    input_dir=Path(input_dirname)
+    input_files=list(input_dir.glob("*.txt"))
+
+    logger.info(f"{len(input_files)} files exist in the input directory")
+
+    #Create output directory
     output_dir=Path(output_dirname)
     output_dir.mkdir(exist_ok=True,parents=True)
 
-    if start_index is None:
-        start_index=0
+    #Create a subset of the list if either the start or the end index is specified
+    start_index=start_index if start_index is not None else 0
+    end_index=end_index if end_index is not None else len(input_files)
 
-    file_info_list=file_info_list[start_index:]
+    input_files=input_files[start_index:end_index]
 
-    for file_info in tqdm(file_info_list):
-        input_filepath:str=file_info["filepath"]
-        input_filepath_hash:str=file_info["filepath_hash"]
+    #Rearchive
+    logger.info("Start rearchiving the files...")
+    for input_file in input_files:
+        logger.info(f"Creating archive of {input_file.name}")
 
-        extension=Path(input_filepath).suffix[1:].lower()
-        if extension!="txt":
-            raise RuntimeError(f"Unsupported file extension: {extension}")
-
-        with open(input_filepath,"r",encoding="utf-8",errors="replace") as r:
-            lines=r.read().splitlines()
-
-        output_file=output_dir.joinpath(f"{input_filepath_hash}.txt.gz")
+        output_file=output_dir.joinpath(f"{input_file.name}.gz")
         with gzip.open(output_file,"wt",encoding="utf-8") as wt:
-            for line in lines:
-                wt.write(f"{line}\n")
+            with input_file.open("r",encoding="utf-8") as r:
+                for line in r:
+                    line=line.strip()
+                    wt.write(f"{line}\n")
+
+    logger.info("Finished rearchiving the files")
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument("-i","--file-list-filepath",type=str)
+    parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-s","--start-index",type=int)
+    parser.add_argument("--start-index",type=int)
+    parser.add_argument("--end-index",type=int)
     args=parser.parse_args()
     
     main(args)
