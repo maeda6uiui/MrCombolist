@@ -49,12 +49,10 @@ def main(args):
 
     count_result={
         "email": {
-            "total": sum(email_total_counts.values()),
-            "unique": sum(email_unique_counts.values())
+            "total": sum(email_total_counts.values())
         },
         "poh": {
-            "total": sum(poh_total_counts.values()),
-            "unique": sum(poh_unique_counts.values())
+            "total": sum(poh_total_counts.values())
         },
         "dataframes": [
             {
