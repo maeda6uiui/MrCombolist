@@ -57,6 +57,8 @@ def main(args):
         output_file=output_dir.joinpath(f"{input_dir.name}.parquet")
         df.to_parquet(output_file,index=False)
 
+    logger.info("Finished converting to parquet")
+
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-root-dirname",type=str)
