@@ -47,7 +47,7 @@ def main(args):
         df=pd.read_parquet(input_file)
 
         #Rename value column to "word"
-        df.rename(columns={val_column_name: "word"})
+        df.rename(columns={val_column_name: "word"},inplace=True)
 
         #Create connection and output to sql
         db_file=output_dir.joinpath(f"{input_file.stem}.db")
