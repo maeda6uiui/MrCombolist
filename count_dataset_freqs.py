@@ -58,10 +58,12 @@ def main(args):
         #Update records if exists
         cur.execute(
             """
-            UPDATE dataset_freqs SET freq=freq+(
-                SELECT tmpdb.freqs.freq
-                FROM tmpdb.freqs
-                WHERE tmpdb.freqs.word=dataset_freqs.word
+            UPDATE dataset_freqs SET freq=freq+COALESCE(
+                (
+                    SELECT tmpdb.freqs.freq
+                    FROM tmpdb.freqs
+                    WHERE tmpdb.freqs.word=dataset_freqs.word
+                ),0
             )
             WHERE EXISTS (
                 SELECT 1
@@ -70,6 +72,8 @@ def main(args):
             );
             """
         )
+        conn.commit()
+
         #Insert records if not exist
         cur.execute(
             """
@@ -83,8 +87,6 @@ def main(args):
             );
             """
         )
-
-        #Commit
         conn.commit()
 
         #Detach temp DB
