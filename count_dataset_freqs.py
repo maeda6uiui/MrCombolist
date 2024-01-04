@@ -8,6 +8,8 @@ def main(args):
     input_dirname:str=args.input_dirname
     db_filepath:str=args.db_filepath
     remove_db_if_exists:bool=args.remove_db_if_exists
+    start_index:int=args.start_index
+    end_index:int=args.end_index
     
     #Set up logger
     with open("./logging_config.yaml","r",encoding="utf-8") as r:
@@ -24,14 +26,20 @@ def main(args):
 
     logger.info(f"{len(input_files)} files exist in the input directory")
 
+    #Create a subset of the list if either the start or the end index is specified
+    start_index=start_index if start_index is not None else 0
+    end_index=end_index if end_index is not None else len(input_files)
+
+    input_files=input_files[start_index:end_index]
+
     #Remove DB if already exists
     db_file=Path(db_filepath)
     if remove_db_if_exists and db_file.exists():
         db_file.unlink()
         logger.info(f"DB file '{db_file.name}' was removed")
 
-    #Set up DB
-    logger.info("Start setting up DB...")
+    #Create table to gather local frequencies
+    logger.info("Creating table to gather local frequencies...")
     with sqlite3.connect(db_filepath) as conn:
         cur=conn.cursor()
 
@@ -46,7 +54,7 @@ def main(args):
         )
         conn.commit()
 
-    #Insert all records of the temp tables into the main table
+    #Insert all records of the local frequency tables into the gathering table
     logger.info("Start gathering records from local frequency tables...")
     with sqlite3.connect(db_filepath) as conn:
         cur=conn.cursor()
@@ -73,12 +81,36 @@ def main(args):
     logger.info("Finished gathering records from local frequency tables")
 
     #Count dataset frequencies
-    logger.info("Start counting dataset frequencies (consolidating local frequencies)...")
+    logger.info("Start counting dataset frequencies...")
     with sqlite3.connect(db_filepath) as conn:
         cur=conn.cursor()
-        
-        #Todo: Implement here...
-        pass
+
+        #Create table for dataset frequencies
+        cur.execute(
+            """
+            CREATE TABLE dataset_freqs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                word STRING NOT NULL,
+                freq INTEGER NOT NULL
+            );
+            """
+        )
+        conn.commit()
+
+        #Consolidate local frequencies
+        cur.execute(
+            """
+            INSERT INTO dataset_freqs (word,freq)
+            SELECT word,SUM(freq)
+            FROM freqs
+            GROUP BY word;
+            """
+        )
+        conn.commit()
+
+        #Remove table for local frequencies
+        cur.execute("DROP TABLE freqs;")
+        conn.commit()
 
     logger.info("Finished counting dataset frequencies")
 
@@ -87,6 +119,8 @@ if __name__=="__main__":
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-o","--db-filepath",type=str)
     parser.add_argument("--remove-db-if-exists",action="store_true")
+    parser.add_argument("--start-index",type=int)
+    parser.add_argument("--end-index",type=int)
     args=parser.parse_args()
 
     main(args)
