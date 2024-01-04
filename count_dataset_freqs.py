@@ -32,67 +32,53 @@ def main(args):
 
     #Set up DB
     logger.info("Start setting up DB...")
+    with sqlite3.connect(db_filepath) as conn:
+        cur=conn.cursor()
 
-    conn=sqlite3.connect(db_filepath)
-    cur=conn.cursor()
+        cur.execute(
+            """
+            CREATE TABLE freqs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                word STRING NOT NULL,
+                freq INTEGER NOT NULL
+            );
+            """
+        )
+        conn.commit()
 
-    cur.execute(
-        """
-        CREATE TABLE dataset_freqs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            word STRING NOT NULL,
-            freq INTEGER NOT NULL
-        );
-        """
-    )
-    conn.commit()
+    #Insert all records of the temp tables into the main table
+    logger.info("Start gathering records from local frequency tables...")
+    with sqlite3.connect(db_filepath) as conn:
+        cur=conn.cursor()
+
+        for input_file in input_files:
+            logger.info(f"Processing '{input_file.name}'")
+
+            #Attach temp DB
+            cur.execute(f"ATTACH DATABASE '{str(input_file)}' AS tmpdb;")
+
+            #Insert records
+            cur.execute(
+                """
+                INSERT INTO freqs (word,freq)
+                SELECT word,freq
+                FROM tmpdb.freqs;
+                """
+            )
+            conn.commit()
+
+            #Detach temp DB
+            cur.execute("DETACH tmpdb;")
+
+    logger.info("Finished gathering records from local frequency tables")
 
     #Count dataset frequencies
-    logger.info("Start counting dataset frequencies...")
-    for input_file in input_files:
-        logger.info(f"Processing '{input_file.name}'")
-
-        #Attach temp DB
-        cur.execute(f"ATTACH DATABASE '{str(input_file)}' AS tmpdb;")
-
-        #Update records if exists
-        cur.execute(
-            """
-            UPDATE dataset_freqs SET freq=freq+COALESCE(
-                (
-                    SELECT tmpdb.freqs.freq
-                    FROM tmpdb.freqs
-                    WHERE tmpdb.freqs.word=dataset_freqs.word
-                ),0
-            )
-            WHERE EXISTS (
-                SELECT 1
-                FROM dataset_freqs,tmpdb.freqs
-                WHERE dataset_freqs.word=tmpdb.freqs.word
-            );
-            """
-        )
-        conn.commit()
-
-        #Insert records if not exist
-        cur.execute(
-            """
-            INSERT INTO dataset_freqs (word,freq)
-            SELECT word,freq
-            FROM tmpdb.freqs
-            WHERE NOT EXISTS (
-                SELECT 1
-                FROM dataset_freqs
-                WHERE dataset_freqs.word=tmpdb.freqs.word
-            );
-            """
-        )
-        conn.commit()
-
-        #Detach temp DB
-        cur.execute("DETACH tmpdb;")
-
-    conn.close()
+    logger.info("Start counting dataset frequencies (consolidating local frequencies)...")
+    with sqlite3.connect(db_filepath) as conn:
+        cur=conn.cursor()
+        
+        #Todo: Implement here...
+        pass
 
     logger.info("Finished counting dataset frequencies")
 
