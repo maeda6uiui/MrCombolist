@@ -55,19 +55,6 @@ def main(args):
         #Attach temp DB
         cur.execute(f"ATTACH DATABASE '{str(input_file)}' AS tmpdb;")
 
-        #Insert records if not exist
-        cur.execute(
-            """
-            INSERT INTO dataset_freqs (word,freq)
-            SELECT word,freq
-            FROM tmpdb.freqs
-            WHERE NOT EXISTS (
-                SELECT *
-                FROM tmpdb.freqs
-                WHERE tmpdb.freqs.word=dataset_freqs.word
-            );
-            """
-        )
         #Update records if exists
         cur.execute(
             """
@@ -77,9 +64,22 @@ def main(args):
                 WHERE tmpdb.freqs.word=dataset_freqs.word
             )
             WHERE EXISTS (
-                SELECT *
-                FROM tmpdb.freqs
-                WHERE tmpdb.freqs.word=dataset_freqs.word
+                SELECT 1
+                FROM dataset_freqs,tmpdb.freqs
+                WHERE dataset_freqs.word=tmpdb.freqs.word
+            );
+            """
+        )
+        #Insert records if not exist
+        cur.execute(
+            """
+            INSERT INTO dataset_freqs (word,freq)
+            SELECT word,freq
+            FROM tmpdb.freqs
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM dataset_freqs
+                WHERE dataset_freqs.word=tmpdb.freqs.word
             );
             """
         )
