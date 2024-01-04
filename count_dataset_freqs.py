@@ -38,10 +38,10 @@ def main(args):
 
     cur.execute(
         """
-        CREATE TABLE dataset_frequencies (
+        CREATE TABLE dataset_freqs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             word STRING NOT NULL,
-            frequency INTEGER NOT NULL
+            freq INTEGER NOT NULL
         );
         """
     )
@@ -58,28 +58,28 @@ def main(args):
         #Insert records if not exist
         cur.execute(
             """
-            INSERT INTO dataset_frequencies (word,frequency)
-            SELECT word,frequency
-            FROM tmpdb.frequencies
+            INSERT INTO dataset_freqs (word,freq)
+            SELECT word,freq
+            FROM tmpdb.freqs
             WHERE NOT EXISTS (
                 SELECT *
-                FROM tmpdb.frequencies
-                WHERE tmpdb.frequencies.word=dataset_frequencies.word
+                FROM tmpdb.freqs
+                WHERE tmpdb.freqs.word=dataset_freqs.word
             );
             """
         )
         #Update records if exists
         cur.execute(
             """
-            UPDATE dataset_frequencies SET frequency=frequency+(
-                SELECT local_frequencies.frequency
-                FROM tmpdb.frequencies
-                WHERE tmpdb.frequencies.word=dataset_frequencies.word
+            UPDATE dataset_freqs SET freq=freq+(
+                SELECT tmpdb.freqs.freq
+                FROM tmpdb.freqs
+                WHERE tmpdb.freqs.word=dataset_freqs.word
             )
             WHERE EXISTS (
                 SELECT *
-                FROM tmpdb.frequencies
-                WHERE tmpdb.frequencies.word=dataset_frequencies.word
+                FROM tmpdb.freqs
+                WHERE tmpdb.freqs.word=dataset_freqs.word
             );
             """
         )
