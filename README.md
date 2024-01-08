@@ -11,6 +11,25 @@ This is just a hobby project for my free time. :-)
 
 ## Notes
 
+### 2024-01-08
+
+Created SQLite DBs from the *Cit0day* dataset.
+Below is a sample query to get top 10 most frequent PoH's (Password or Hash).
+
+```
+> SELECT word,freq FROM dataset_freqs ORDER BY freq DESC LIMIT 10;
+('2C50B4105AAC4C8BF2BB53A2481587DFA3B272E6', 642075)
+(123456, 628209)
+('da39a3ee5e6b4b0d3255bfef95601890afd80709', 522394)
+('thehatch', 247991)
+('d41d8cd98f00b204e9800998ecf8427e', 231404)
+('e10adc3949ba59abbe56e057f20f883e', 203910)
+('e10adc3949ba59abbe56e057f20f883ed93a5def7511da3d0f2d171d9c344e91', 153303)
+(123456789, 148713)
+('c6d326e212f4f006100ce0f721559aaf', 146382)
+('password', 118624)
+```
+
 ### 2024-01-01
 
 Currently testing to process a combolist with below procedure.
