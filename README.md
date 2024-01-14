@@ -11,6 +11,23 @@ This is just a hobby project for my free time. :-)
 
 ## Notes
 
+### 2024-01-14
+
+Procedure update
+
+1. Unarchive (unarchive.py)
+2. Flatten (flatten.py)
+3. Split into chunks (split.py)
+4. Regroup (regroup.py)
+5. Rearchive (rearchive.py)
+6. Detect schema (detect_schema.py)
+7. Parse (parse.py)
+8. Cleanup (cleanup.py)
+9. Convert to Parquet (to_parquet.py)
+10. Count local frequencies (count_local_freqs.py)
+11. Convert to SQL (SQLite DB) (to_sql.py)
+12. Count dataset frequencies (count_dataset_freqs.py)
+
 ### 2024-01-08
 
 Created SQLite DBs from the *Cit0day* dataset.
