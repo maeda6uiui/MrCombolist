@@ -31,7 +31,7 @@ I've started to use this term out of a whim, so it may be changed in case any be
 ### 2024-04-06
 
 Updated some scripts and added an image explaining the current operation flow.
-Also, just got up to the *Collection 1* dataset.
+Also, just resumed working with the *Collection 1* dataset.
 
 ### 2024-01-14
 
