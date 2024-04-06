@@ -9,7 +9,29 @@ This repo is for the scripts to work with combolists and (maybe) for analysis re
 It's subject to frequent change, and I don't have any plans to get it production-ready.
 This is just a hobby project for my free time. :-)
 
+### Operation flow
+
+![Operation flow](./Image/operation_flow.png)
+
+### Terminology
+
+#### PoH
+
+PoH stands for "Password or Hash".
+Combolists contain hashed passwords as well as plaintext ones.
+
+#### Persona
+
+Persona (pl. personae) is a set of data related to an email address.
+Currently, it is a set of email address and poh.
+I've started to use this term out of a whim, so it may be changed in case any better word is found.
+
 ## Notes
+
+### 2024-04-06
+
+Updated some scripts and added an image explaining the current operation flow.
+Also, just got up to the *Collection 1* dataset.
 
 ### 2024-01-14
 
