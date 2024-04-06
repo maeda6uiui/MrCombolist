@@ -6,7 +6,7 @@ from pathlib import Path
 
 def main(args):
     input_dirname:str=args.input_dirname
-    db_filepath:str=args.db_filepath
+    output_filepath:str=args.output_filepath
     remove_db_if_exists:bool=args.remove_db_if_exists
     start_index:int=args.start_index
     end_index:int=args.end_index
@@ -33,14 +33,14 @@ def main(args):
     input_files=input_files[start_index:end_index]
 
     #Remove DB if already exists
-    db_file=Path(db_filepath)
-    if remove_db_if_exists and db_file.exists():
-        db_file.unlink()
-        logger.info(f"DB file '{db_file.name}' was removed")
+    output_file=Path(output_filepath)
+    if remove_db_if_exists and output_file.exists():
+        output_file.unlink()
+        logger.info(f"DB file '{output_file.name}' was removed")
 
     #Create table to gather local frequencies
     logger.info("Creating table to gather local frequencies...")
-    with sqlite3.connect(db_filepath) as conn:
+    with sqlite3.connect(output_filepath) as conn:
         cur=conn.cursor()
 
         cur.execute(
@@ -56,7 +56,7 @@ def main(args):
 
     #Insert all records of the local frequency tables into the gathering table
     logger.info("Start gathering records from local frequency tables...")
-    with sqlite3.connect(db_filepath) as conn:
+    with sqlite3.connect(output_filepath) as conn:
         cur=conn.cursor()
 
         for input_file in input_files:
@@ -82,7 +82,7 @@ def main(args):
 
     #Count dataset frequencies
     logger.info("Start counting dataset frequencies...")
-    with sqlite3.connect(db_filepath) as conn:
+    with sqlite3.connect(output_filepath) as conn:
         cur=conn.cursor()
 
         #Create table for dataset frequencies
@@ -117,7 +117,7 @@ def main(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-dirname",type=str)
-    parser.add_argument("-o","--db-filepath",type=str)
+    parser.add_argument("-o","--output-filepath",type=str)
     parser.add_argument("--remove-db-if-exists",action="store_true")
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
