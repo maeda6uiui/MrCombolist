@@ -40,8 +40,8 @@ def main(args):
             """
             CREATE TABLE personae (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email STRING NOT NULL,
-                poh STRING NOT NULL
+                email STRING,
+                poh STRING
             );
             """
         )
