@@ -8,8 +8,9 @@ from pathlib import Path
 def main(args):
     input_dirname:str=args.input_dirname
     output_dirname:str=args.output_dirname
-    val_column_name:str=args.val_column_name
-    table_name:str=args.table_name
+    email_freqs_db:bool=args.email_freqs_db
+    poh_freqs_db:bool=args.poh_freqs_db
+    email_and_poh_db:bool=args.email_and_poh_db
     start_index:int=args.start_index
     end_index:int=args.end_index
 
@@ -38,6 +39,22 @@ def main(args):
 
     input_files=input_files[start_index:end_index]
 
+    #Determine value column name and table name
+    val_column_name=""
+    table_name=""
+
+    if email_freqs_db:
+        val_column_name="email"
+        table_name="freqs"
+    elif poh_freqs_db:
+        val_column_name="poh"
+        table_name="freqs"
+    elif email_and_poh_db:
+        table_name="personae"
+    else:
+        logger.error("Must specify the type of DB to be created")
+        return
+
     #Convert to sql
     logger.info("Start converting to sql...")
     for input_file in input_files:
@@ -47,7 +64,8 @@ def main(args):
         df=pd.read_parquet(input_file)
 
         #Rename value column to "word"
-        df.rename(columns={val_column_name: "word"},inplace=True)
+        if val_column_name!="":
+            df.rename(columns={val_column_name: "word"},inplace=True)
 
         #Create connection and output to sql
         db_file=output_dir.joinpath(f"{input_file.stem}.db")
@@ -60,8 +78,9 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-c","--val-column-name",type=str)
-    parser.add_argument("-t","--table-name",type=str,default="freqs")
+    parser.add_argument("--email-freqs-db",action="store_true")
+    parser.add_argument("--poh-freqs-db",action="store_true")
+    parser.add_argument("--email-and-poh-db",action="store_true")
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
     args=parser.parse_args()
