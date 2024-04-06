@@ -8,8 +8,6 @@ def main(args):
     input_dirname:str=args.input_dirname
     output_filepath:str=args.output_filepath
     remove_db_if_exists:bool=args.remove_db_if_exists
-    start_index:int=args.start_index
-    end_index:int=args.end_index
     
     #Set up logger
     with open("./logging_config.yaml","r",encoding="utf-8") as r:
@@ -26,12 +24,6 @@ def main(args):
 
     logger.info(f"{len(input_files)} files exist in the input directory")
 
-    #Create a subset of the list if either the start or the end index is specified
-    start_index=start_index if start_index is not None else 0
-    end_index=end_index if end_index is not None else len(input_files)
-
-    input_files=input_files[start_index:end_index]
-
     #Remove DB if already exists
     output_file=Path(output_filepath)
     if remove_db_if_exists and output_file.exists():
@@ -45,7 +37,7 @@ def main(args):
 
         cur.execute(
             """
-            CREATE TABLE freqs (
+            CREATE TABLE local_freqs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 word STRING NOT NULL,
                 freq INTEGER NOT NULL
@@ -68,7 +60,7 @@ def main(args):
             #Insert records
             cur.execute(
                 """
-                INSERT INTO freqs (word,freq)
+                INSERT INTO local_freqs (word,freq)
                 SELECT word,freq
                 FROM tmpdb.freqs;
                 """
@@ -80,15 +72,15 @@ def main(args):
 
     logger.info("Finished gathering records from local frequency tables")
 
-    #Count dataset frequencies
-    logger.info("Start counting dataset frequencies...")
+    #Merge local frequencies
+    logger.info("Start merging local frequencies...")
     with sqlite3.connect(output_filepath) as conn:
         cur=conn.cursor()
 
-        #Create table for dataset frequencies
+        #Create table to merge frequencies
         cur.execute(
             """
-            CREATE TABLE dataset_freqs (
+            CREATE TABLE freqs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 word STRING NOT NULL,
                 freq INTEGER NOT NULL
@@ -100,27 +92,25 @@ def main(args):
         #Consolidate local frequencies
         cur.execute(
             """
-            INSERT INTO dataset_freqs (word,freq)
+            INSERT INTO freqs (word,freq)
             SELECT word,SUM(freq)
-            FROM freqs
+            FROM local_freqs
             GROUP BY word;
             """
         )
         conn.commit()
 
         #Remove table for local frequencies
-        cur.execute("DROP TABLE freqs;")
+        cur.execute("DROP TABLE local_freqs;")
         conn.commit()
 
-    logger.info("Finished counting dataset frequencies")
+    logger.info("Finished merging local frequencies")
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-o","--output-filepath",type=str)
     parser.add_argument("--remove-db-if-exists",action="store_true")
-    parser.add_argument("--start-index",type=int)
-    parser.add_argument("--end-index",type=int)
     args=parser.parse_args()
 
     main(args)
