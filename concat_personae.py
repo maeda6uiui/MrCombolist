@@ -40,7 +40,7 @@ def main(args):
             """
             CREATE TABLE personae (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email STRING,
+                email STRING NOT NULL,
                 poh STRING
             );
             """
@@ -59,7 +59,8 @@ def main(args):
                 """
                 INSERT INTO personae (email,poh)
                 SELECT email,poh
-                FROM tmpdb.personae;
+                FROM tmpdb.personae
+                WHERE email IS NOT NULL;
                 """
             )
             conn.commit()
