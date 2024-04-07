@@ -51,12 +51,12 @@ def main(args):
         }
         flattening_results.append(flatten_result)
 
+    logger.info("Finished flattening the files")
+
     #Output flatten results to a log file
     flattening_log_file=Path(flattening_log_filepath)
     with flattening_log_file.open("w",encoding="utf-8") as w:
         json.dump(flattening_results,w,ensure_ascii=False)
-
-    logger.info("Finished flattening the files")
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
