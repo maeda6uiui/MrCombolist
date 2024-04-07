@@ -8,7 +8,7 @@ def main(args):
     input_dirname:str=args.input_dirname
     input_filepaths:str=args.input_filepaths
     output_filepath:str=args.output_filepath
-    concat_personae_log_filepath:str=args.concat_personae_log_filepath
+    log_filepath:str=args.log_filepath
     remove_db_if_exists:bool=args.remove_db_if_exists
 
     #Set up logger
@@ -87,9 +87,9 @@ def main(args):
     logger.info("Finished concatenating personae")
 
     #Output list of input files to a log file
-    if concat_personae_log_filepath is not None:
-        concat_log_file=Path(concat_personae_log_filepath)
-        with concat_log_file.open("w",encoding="utf-8") as w:
+    if log_filepath is not None:
+        log_file=Path(log_filepath)
+        with log_file.open("w",encoding="utf-8") as w:
             for input_file in input_files:
                 w.write(f"{str(input_file)}\n")
 
@@ -98,7 +98,7 @@ if __name__=="__main__":
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-f","--input-filepaths",type=str)
     parser.add_argument("-o","--output-filepath",type=str)
-    parser.add_argument("-l","--concat-personae-log-filepath",type=str)
+    parser.add_argument("-l","--log-filepath",type=str)
     parser.add_argument("--remove-db-if-exists",action="store_true")
     args=parser.parse_args()
 

@@ -66,7 +66,7 @@ def detect_schema(
 
 def main(args):
     input_dirname:str=args.input_dirname
-    schema_detection_log_dirname:str=args.schema_detection_log_dirname
+    log_dirname:str=args.log_dirname
     delimiter_candidates:str=args.delimiter_candidates
     max_num_lines:int=args.max_num_lines
     max_line_length:int=args.max_line_length
@@ -89,8 +89,8 @@ def main(args):
     logger.info(f"{len(input_files)} files exist in the input directory")
 
     #Create a directory for schema detection logs
-    schema_detection_log_dir=Path(schema_detection_log_dirname)
-    schema_detection_log_dir.mkdir(exist_ok=True,parents=True)
+    log_dir=Path(log_dirname)
+    log_dir.mkdir(exist_ok=True,parents=True)
 
     #Set up regular expressions
     r_email_head=re.compile(r"^\S+@\S+\.\S+"+f"[{delimiter_candidates}]")
@@ -126,8 +126,8 @@ def main(args):
             "schema": schema
         }
 
-        schema_detection_log_file=schema_detection_log_dir.joinpath(f"{input_file.stem}.json")
-        with schema_detection_log_file.open("w",encoding="utf-8") as w:
+        log_file=log_dir.joinpath(f"{input_file.stem}.json")
+        with log_file.open("w",encoding="utf-8") as w:
             json.dump(schema_detection_result,w,ensure_ascii=False)
 
     logger.info("Finished schema detection")
@@ -135,7 +135,7 @@ def main(args):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-dirname",type=str)
-    parser.add_argument("-l","--schema-detection-log-dirname",type=str)
+    parser.add_argument("-l","--log-dirname",type=str)
     parser.add_argument("-d","--delimiter-candidates",type=str,default=":;|, \t")
     parser.add_argument("--max-num-lines",type=int,default=10000000)
     parser.add_argument("--max-line-length",type=int,default=200)

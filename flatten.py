@@ -9,7 +9,7 @@ from tqdm import tqdm
 def main(args):
     input_root_dirname:str=args.input_root_dirname
     output_dirname:str=args.output_dirname
-    flattening_log_filepath:str=args.flattening_log_filepath
+    log_filepath:str=args.log_filepath
 
     #Set up logger
     with open("./logging_config.yaml","r",encoding="utf-8") as r:
@@ -54,15 +54,15 @@ def main(args):
     logger.info("Finished flattening the files")
 
     #Output flatten results to a log file
-    flattening_log_file=Path(flattening_log_filepath)
-    with flattening_log_file.open("w",encoding="utf-8") as w:
+    log_file=Path(log_filepath)
+    with log_file.open("w",encoding="utf-8") as w:
         json.dump(flattening_results,w,ensure_ascii=False)
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-root-dirname",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-l","--flattening-log-filepath",type=str)
+    parser.add_argument("-l","--log-filepath",type=str)
     args=parser.parse_args()
 
     main(args)

@@ -20,7 +20,7 @@ def str_endswith_any(given:str,candidates:list[str])->bool:
 def main(args):
     input_root_dirname:str=args.input_root_dirname
     output_root_dirname:str=args.output_root_dirname
-    unarchive_log_dirname:str=args.unarchive_log_dirname
+    log_dirname:str=args.log_dirname
     start_index:int=args.start_index
     end_index:int=args.end_index
     unrar_tool_filepath:str=args.unrar_tool_filepath
@@ -59,17 +59,17 @@ def main(args):
     output_root_dir.mkdir(exist_ok=True,parents=True)
 
     #Create a directory for unarchive logs
-    unarchive_log_dir=Path(unarchive_log_dirname)
-    unarchive_log_dir.mkdir(exist_ok=True,parents=True)
+    log_dir=Path(log_dirname)
+    log_dir.mkdir(exist_ok=True,parents=True)
 
     #Output paths of input files to a text file
-    input_filepaths_log_file=unarchive_log_dir.joinpath("input_filepaths.txt")
+    input_filepaths_log_file=log_dir.joinpath("input_filepaths.txt")
     with input_filepaths_log_file.open("w",encoding="utf-8") as w:
         for input_file in input_files:
             w.write(f"{str(input_file)}\n")
 
     #Output paths of excluded files to a text file
-    excluded_filepaths_log_file=unarchive_log_dir.joinpath("excluded_filepaths.txt")
+    excluded_filepaths_log_file=log_dir.joinpath("excluded_filepaths.txt")
     with excluded_filepaths_log_file.open("w",encoding="utf-8") as w:
         for excluded_file in excluded_files:
             w.write(f"{str(excluded_file)}\n")
@@ -118,7 +118,7 @@ def main(args):
             }
 
         #Output unarchive result to the log file
-        unarchive_log_file=unarchive_log_dir.joinpath(f"{uuid4_str}.json")
+        unarchive_log_file=log_dir.joinpath(f"{uuid4_str}.json")
         with unarchive_log_file.open("w",encoding="utf-8") as w:
             json.dump(unarchive_result,w,ensure_ascii=False)
 
@@ -128,7 +128,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-root-dirname",type=str)
     parser.add_argument("-o","--output-root-dirname",type=str)
-    parser.add_argument("-l","--unarchive-log-dirname",type=str)
+    parser.add_argument("-l","--log-dirname",type=str)
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
     parser.add_argument("--unrar-tool-filepath",type=str,default="./Bin/UnRAR.exe")

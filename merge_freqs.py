@@ -8,7 +8,7 @@ def main(args):
     input_dirname:str=args.input_dirname
     input_filepaths:str=args.input_filepaths
     output_filepath:str=args.output_filepath
-    merge_freqs_log_filepath:str=args.merge_freqs_log_filepath
+    log_filepath:str=args.log_filepath
     remove_db_if_exists:bool=args.remove_db_if_exists
     
     #Set up logger
@@ -123,9 +123,9 @@ def main(args):
     logger.info("Finished merging local frequencies")
 
     #Output list of input files to a log file
-    if merge_freqs_log_filepath is not None:
-        merge_log_file=Path(merge_freqs_log_filepath)
-        with merge_log_file.open("w",encoding="utf-8") as w:
+    if log_filepath is not None:
+        log_file=Path(log_filepath)
+        with log_file.open("w",encoding="utf-8") as w:
             for input_file in input_files:
                 w.write(f"{str(input_file)}\n")
 
@@ -134,7 +134,7 @@ if __name__=="__main__":
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-f","--input-filepaths",type=str)
     parser.add_argument("-o","--output-filepath",type=str)
-    parser.add_argument("-l","--merge-freqs-log-filepath",type=str)
+    parser.add_argument("-l","--log-filepath",type=str)
     parser.add_argument("--remove-db-if-exists",action="store_true")
     args=parser.parse_args()
 

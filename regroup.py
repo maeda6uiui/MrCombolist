@@ -33,7 +33,7 @@ class GroupInfo(object):
 def main(args):
     input_dirname:str=args.input_dirname
     output_dirname:str=args.output_dirname
-    regrouping_log_dirname:str=args.regrouping_log_dirname
+    log_dirname:str=args.log_dirname
     num_files_per_group:int=args.num_files_per_group
     start_index:int=args.start_index
     end_index:int=args.end_index
@@ -65,8 +65,8 @@ def main(args):
     output_dir.mkdir(exist_ok=True,parents=True)
 
     #Create a directory for regrouping logs
-    regrouping_log_dir=Path(regrouping_log_dirname)
-    regrouping_log_dir.mkdir(exist_ok=True,parents=True)
+    log_dir=Path(log_dirname)
+    log_dir.mkdir(exist_ok=True,parents=True)
 
     #Set start and end indices
     start_index=start_index if start_index is not None else 0
@@ -104,7 +104,7 @@ def main(args):
                 w.write(f"{line}\n")
 
         #Output group info to a log file
-        regrouping_log_file=regrouping_log_dir.joinpath(f"{i}.json")
+        regrouping_log_file=log_dir.joinpath(f"{i}.json")
         with regrouping_log_file.open("w",encoding="utf-8") as w:
             json.dump(group_info.to_dict(),w,ensure_ascii=False)
 
@@ -114,7 +114,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("-i","--input-dirname",type=str)
     parser.add_argument("-o","--output-dirname",type=str)
-    parser.add_argument("-l","--regrouping-log-dirname",type=str)
+    parser.add_argument("-l","--log-dirname",type=str)
     parser.add_argument("-n","--num-files-per-group",type=int)
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
