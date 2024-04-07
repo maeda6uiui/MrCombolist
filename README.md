@@ -28,6 +28,41 @@ I've started to use this term out of a whim, so it may be changed in case any be
 
 ## Notes
 
+### 2024-04-07
+
+Obtained 2,616,227,379 personae from the *Collection 1* dataset.
+Here are 10 most frequent pohs of the dataset:
+
+```
+> SELECT word,freq FROM freqs ORDER BY freq DESC LIMIT 10;
+(123456, 18442419)
+(123456789, 9448028)
+('password', 5054888)
+('qwerty', 4233883)
+(12345, 3265726)
+(12345678, 3187054)
+('qwerty123', 1984784)
+(1234567890, 1831612)
+(111111, 1720032)
+('1q2w3e', 1694497)
+```
+
+10 most frequent pohs of the *Cit0day* dataset, but this time with a condition of `LENGTH(word)<=24` in hopes of excluding hash values:
+
+```
+> SELECT word,freq FROM freqs WHERE LENGTH(word)<=24 ORDER BY freq DESC LIMIT 10;
+(123456, 628209)
+('thehatch', 247991)
+(123456789, 148713)
+('password', 118624)
+('123abc', 109693)
+(12345, 109306)
+('x4ivygA51F', 97462)
+('D1lakiss', 89666)
+(1234, 81785)
+(0, 81277)
+```
+
 ### 2024-04-06
 
 Updated some scripts and added an image explaining the current operation flow.
