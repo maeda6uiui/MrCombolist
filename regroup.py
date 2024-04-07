@@ -104,8 +104,8 @@ def main(args):
                 w.write(f"{line}\n")
 
         #Output group info to a log file
-        regrouping_log_file=log_dir.joinpath(f"{i}.json")
-        with regrouping_log_file.open("w",encoding="utf-8") as w:
+        log_file=log_dir.joinpath(f"{i}.json")
+        with log_file.open("w",encoding="utf-8") as w:
             json.dump(group_info.to_dict(),w,ensure_ascii=False)
 
     logger.info("Finished regrouping the files")
