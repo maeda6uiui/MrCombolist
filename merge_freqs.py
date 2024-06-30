@@ -40,6 +40,8 @@ def main(args):
 
         logger.info(f"{len(input_files)} files exist in the input directory")
 
+    input_files.sort()
+
     #Remove DB if already exists
     output_file=Path(output_filepath)
     if remove_db_if_exists and output_file.exists():

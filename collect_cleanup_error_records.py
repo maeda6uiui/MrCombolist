@@ -29,6 +29,7 @@ def main(args):
     cleanup_root_dir=Path(cleanup_root_dirname)
     cleanup_dirs=cleanup_root_dir.glob("*")
     cleanup_dirs=[f for f in cleanup_dirs if f.is_dir()]
+    cleanup_dirs.sort()
 
     logger.info(f"{len(cleanup_dirs)} folders exist in the cleanup directory")
 

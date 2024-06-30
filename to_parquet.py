@@ -24,6 +24,7 @@ def main(args):
     input_root_dir=Path(input_root_dirname)
     input_dirs=input_root_dir.glob("*")
     input_dirs=[f for f in input_dirs if f.is_dir()]
+    input_dirs.sort()
 
     logger.info(f"{len(input_dirs)} folders exist in the input directory")
 

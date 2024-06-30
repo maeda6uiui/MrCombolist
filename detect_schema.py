@@ -85,6 +85,7 @@ def main(args):
     #Get all gzip files in the input directory
     input_dir=Path(input_dirname)
     input_files=list(input_dir.glob("*.txt.gz"))
+    input_files.sort()
 
     logger.info(f"{len(input_files)} files exist in the input directory")
 

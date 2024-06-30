@@ -27,6 +27,7 @@ def main(args):
     input_root_dir=Path(input_root_dirname)
     input_files=input_root_dir.glob("**/*.txt")
     input_files=[f for f in input_files if f.is_file()]
+    input_files.sort()
 
     logger.info(f"{len(input_files)} files exist in the input directory")
 

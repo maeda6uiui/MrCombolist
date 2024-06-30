@@ -54,6 +54,9 @@ def main(args):
 
     logger.info(f"{len(input_files)} files will be unarchived, and {len(excluded_files)} files are excluded as not supported")
 
+    input_files.sort()
+    excluded_files.sort()
+
     #Create output directory
     output_root_dir=Path(output_root_dirname)
     output_root_dir.mkdir(exist_ok=True,parents=True)

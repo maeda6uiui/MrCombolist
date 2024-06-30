@@ -26,6 +26,7 @@ def main(args):
     #Get all parquet files in the input directory
     input_dir=Path(input_dirname)
     input_files=list(input_dir.glob("*.parquet"))
+    input_files.sort()
 
     logger.info(f"{len(input_files)} files exist in the input directory")
 
