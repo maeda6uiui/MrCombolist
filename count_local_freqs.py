@@ -33,7 +33,7 @@ def main(args):
     email_output_dir=output_root_dir.joinpath("Email")
     email_output_dir.mkdir(exist_ok=True)
 
-    poh_output_dir=output_root_dir.joinpath("POH")
+    poh_output_dir=output_root_dir.joinpath("PoH")
     poh_output_dir.mkdir(exist_ok=True)
 
     #Create a subset of the list if either the start or the end index is specified
