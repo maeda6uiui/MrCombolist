@@ -10,7 +10,7 @@ def main(args):
     output_dirname:str=args.output_dirname
     email_freqs_db:bool=args.email_freqs_db
     poh_freqs_db:bool=args.poh_freqs_db
-    email_and_poh_db:bool=args.email_and_poh_db
+    personae_db:bool=args.personae_db
     start_index:int=args.start_index
     end_index:int=args.end_index
 
@@ -50,7 +50,7 @@ def main(args):
     elif poh_freqs_db:
         val_column_name="poh"
         table_name="freqs"
-    elif email_and_poh_db:
+    elif personae_db:
         table_name="personae"
     else:
         logger.error("Must specify the type of DB to be created")
@@ -81,7 +81,7 @@ if __name__=="__main__":
     parser.add_argument("-o","--output-dirname",type=str)
     parser.add_argument("--email-freqs-db",action="store_true")
     parser.add_argument("--poh-freqs-db",action="store_true")
-    parser.add_argument("--email-and-poh-db",action="store_true")
+    parser.add_argument("--personae-db",action="store_true")
     parser.add_argument("--start-index",type=int)
     parser.add_argument("--end-index",type=int)
     args=parser.parse_args()
