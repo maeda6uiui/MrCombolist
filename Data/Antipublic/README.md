@@ -23,3 +23,4 @@ Number of unique pohs: 542,328,965
 ## 1M most frequent pohs
 
 See [top_1M_pohs.tsv.gz](./top_1M_pohs.tsv.gz).
+PoHs with a length larger than 24 characters are excluded.
