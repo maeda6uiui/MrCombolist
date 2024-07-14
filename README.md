@@ -24,7 +24,7 @@ Combolists contain hashed passwords as well as plaintext ones.
 
 Persona (pl. personae) is a set of data related to an email address.
 Currently, it is a set of email address and poh.
-I've started to use this term out of a whim, so it may be changed in case any better word is found.
+I've started to use this term out of a whim, so it may be changed in case any better wordage is found.
 
 ## Notes
 
