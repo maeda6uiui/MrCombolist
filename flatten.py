@@ -1,68 +1,54 @@
-import argparse
 import json
 import shutil
-import yaml
-from logging import getLogger, config
+from logging import Logger
 from pathlib import Path
 from tqdm import tqdm
 
+class MCFlatten:
+    def __init__(
+        self,
+        input_root_dirname:str,
+        output_dirname:str,
+        log_filepath:str,
+        logger:Logger):
+        self.input_root_dirname=input_root_dirname
+        self.output_dirname=output_dirname
+        self.log_filepath=log_filepath
+        self.logger=logger
 
-def main(args):
-    input_root_dirname: str = args.input_root_dirname
-    output_dirname: str = args.output_dirname
-    log_filepath: str = args.log_filepath
+    def run(self):
+        # Get list of all "text" files in the input directory
+        # AFAIK, most combolists are comprised of text files,
+        # but you may want some extra processing in case the combolist
+        # contains other formats of data, such as JSON and SQL
+        input_root_dir = Path(self.input_root_dirname)
+        input_files = input_root_dir.glob("**/*.txt")
+        input_files = [f for f in input_files if f.is_file()]
+        input_files.sort()
 
-    # Set up logger
-    with open("./logging_config.yaml", "r", encoding="utf-8") as r:
-        logging_config = yaml.safe_load(r)
+        self.logger.info(f"{len(input_files)} files exist in the input directory")
 
-    config.dictConfig(logging_config)
+        # Create output directory
+        output_dir = Path(self.output_dirname)
+        output_dir.mkdir(exist_ok=True, parents=True)
 
-    logger = getLogger(__name__)
-    logger.debug(args)
+        # Flatten
+        self.logger.info("Start flattening the files...")
 
-    # Get list of all "text" files in the input directory
-    # AFAIK, most combolists are comprised of text files,
-    # but you may want some extra processing in case the combolist
-    # contains other formats of data, such as JSON and SQL
-    input_root_dir = Path(input_root_dirname)
-    input_files = input_root_dir.glob("**/*.txt")
-    input_files = [f for f in input_files if f.is_file()]
-    input_files.sort()
+        flattening_results: list[dict] = []
 
-    logger.info(f"{len(input_files)} files exist in the input directory")
+        for idx, input_file in enumerate(tqdm(input_files)):
+            # Copy the file
+            output_file = output_dir.joinpath(f"{idx}.txt")
+            shutil.copy(input_file, output_file)
 
-    # Create output directory
-    output_dir = Path(output_dirname)
-    output_dir.mkdir(exist_ok=True, parents=True)
+            # Store the correspondence of the input and the output files
+            flatten_result = {"index": idx, "input_filepath": str(input_file)}
+            flattening_results.append(flatten_result)
 
-    # Flatten
-    logger.info("Start flattening the files...")
+        self.logger.info("Finished flattening the files")
 
-    flattening_results: list[dict] = []
-
-    for idx, input_file in enumerate(tqdm(input_files)):
-        # Copy the file
-        output_file = output_dir.joinpath(f"{idx}.txt")
-        shutil.copy(input_file, output_file)
-
-        # Store the correspondence of the input and the output files
-        flatten_result = {"index": idx, "input_filepath": str(input_file)}
-        flattening_results.append(flatten_result)
-
-    logger.info("Finished flattening the files")
-
-    # Output flatten results to a log file
-    log_file = Path(log_filepath)
-    with log_file.open("w", encoding="utf-8") as w:
-        json.dump(flattening_results, w, ensure_ascii=False)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input-root-dirname", type=str)
-    parser.add_argument("-o", "--output-dirname", type=str)
-    parser.add_argument("-l", "--log-filepath", type=str)
-    args = parser.parse_args()
-
-    main(args)
+        # Output flatten results to a log file
+        log_file = Path(self.log_filepath)
+        with log_file.open("w", encoding="utf-8") as w:
+            json.dump(flattening_results, w, ensure_ascii=False)
