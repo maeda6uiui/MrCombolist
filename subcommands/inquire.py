@@ -12,12 +12,12 @@ class MCInquire:
         max_num_records_to_print: int,
         num_records_for_logging: int,
         logger:Logger):
-        self.db_filepath=db_filepath
-        self.output_filepath=output_filepath
-        self.query=query
-        self.max_num_records_to_print=max_num_records_to_print
-        self.num_records_for_logging=num_records_for_logging
-        self.logger=logger
+        self.__db_filepath=db_filepath
+        self.__output_filepath=output_filepath
+        self.__query=query
+        self.__max_num_records_to_print=max_num_records_to_print
+        self.__num_records_for_logging=num_records_for_logging
+        self.__logger=logger
 
     def __print_records(self,db_filepath: str, query: str, max_num_records_to_print: int):
         with sqlite3.connect(db_filepath) as conn:
@@ -70,16 +70,16 @@ class MCInquire:
 
     def run(self):
         # Check if DB file exists
-        db_file = Path(self.db_filepath)
+        db_file = Path(self.__db_filepath)
         if not db_file.exists():
-            self.logger.error(f"DB file '{db_file.name}' does not exist")
+            self.__logger.error(f"DB file '{db_file.name}' does not exist")
             return
 
         # Print query result
-        if self.output_filepath is None:
-            self.__print_records(self.db_filepath, self.query, self.max_num_records_to_print)
+        if self.__output_filepath is None:
+            self.__print_records(self.__db_filepath, self.__query, self.__max_num_records_to_print)
         # Export to a gzipped TSV file
         else:
             self.__export_records(
-                self.db_filepath, self.query, self.output_filepath, self.num_records_for_logging, self.logger
+                self.__db_filepath, self.__query, self.__output_filepath, self.__num_records_for_logging, self.__logger
             )

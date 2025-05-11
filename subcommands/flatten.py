@@ -11,29 +11,29 @@ class MCFlatten:
         output_dirname:str,
         log_filepath:str,
         logger:Logger):
-        self.input_root_dirname=input_root_dirname
-        self.output_dirname=output_dirname
-        self.log_filepath=log_filepath
-        self.logger=logger
+        self.__input_root_dirname=input_root_dirname
+        self.__output_dirname=output_dirname
+        self.__log_filepath=log_filepath
+        self.__logger=logger
 
     def run(self):
         # Get list of all "text" files in the input directory
         # AFAIK, most combolists are comprised of text files,
         # but you may want some extra processing in case the combolist
         # contains other formats of data, such as JSON and SQL
-        input_root_dir = Path(self.input_root_dirname)
+        input_root_dir = Path(self.__input_root_dirname)
         input_files = input_root_dir.glob("**/*.txt")
         input_files = [f for f in input_files if f.is_file()]
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create output directory
-        output_dir = Path(self.output_dirname)
+        output_dir = Path(self.__output_dirname)
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Flatten
-        self.logger.info("Start flattening the files...")
+        self.__logger.info("Start flattening the files...")
 
         flattening_results: list[dict] = []
 
@@ -46,9 +46,9 @@ class MCFlatten:
             flatten_result = {"index": idx, "input_filepath": str(input_file)}
             flattening_results.append(flatten_result)
 
-        self.logger.info("Finished flattening the files")
+        self.__logger.info("Finished flattening the files")
 
         # Output flatten results to a log file
-        log_file = Path(self.log_filepath)
+        log_file = Path(self.__log_filepath)
         with log_file.open("w", encoding="utf-8") as w:
             json.dump(flattening_results, w, ensure_ascii=False)

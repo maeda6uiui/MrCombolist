@@ -9,33 +9,33 @@ class MCCollectCleanupErrorRecords:
         cleanup_root_dirname: str,
         output_dirname: str,
         logger:Logger):
-        self.parsing_root_dirname=parsing_root_dirname
-        self.cleanup_root_dirname=cleanup_root_dirname
-        self.output_dirname=output_dirname
-        self.logger=logger
+        self.__parsing_root_dirname=parsing_root_dirname
+        self.__cleanup_root_dirname=cleanup_root_dirname
+        self.__output_dirname=output_dirname
+        self.__logger=logger
 
     def run(self):
         # Get all folders in the parsing directory
-        parsing_root_dir = Path(self.parsing_root_dirname)
+        parsing_root_dir = Path(self.__parsing_root_dirname)
         parsing_dirs = parsing_root_dir.glob("*")
         parsing_dirs = [f for f in parsing_dirs if f.is_dir()]
 
-        self.logger.info(f"{len(parsing_dirs)} folders exist in the parsing directory")
+        self.__logger.info(f"{len(parsing_dirs)} folders exist in the parsing directory")
 
         # Get all folders in the cleanup directory
-        cleanup_root_dir = Path(self.cleanup_root_dirname)
+        cleanup_root_dir = Path(self.__cleanup_root_dirname)
         cleanup_dirs = cleanup_root_dir.glob("*")
         cleanup_dirs = [f for f in cleanup_dirs if f.is_dir()]
         cleanup_dirs.sort()
 
-        self.logger.info(f"{len(cleanup_dirs)} folders exist in the cleanup directory")
+        self.__logger.info(f"{len(cleanup_dirs)} folders exist in the cleanup directory")
 
         # Create output directory
-        output_dir = Path(self.output_dirname)
+        output_dir = Path(self.__output_dirname)
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Collect error records of the cleanup process
-        self.logger.info("Starting to collect error records of the cleanup process...")
+        self.__logger.info("Starting to collect error records of the cleanup process...")
         for cleanup_dir in tqdm(cleanup_dirs):
             # Get error line indices
             error_indices: list[int] = []
@@ -59,4 +59,4 @@ class MCCollectCleanupErrorRecords:
                 for error_record in error_records:
                     w.write(f"{error_record}\n")
 
-        self.logger.info("Finished collecting error records of the cleanup process")
+        self.__logger.info("Finished collecting error records of the cleanup process")

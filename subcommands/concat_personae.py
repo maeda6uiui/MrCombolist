@@ -8,21 +8,21 @@ class MCConcatPersonae:
         input_dirname: str,
         output_filepath: str,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_filepath=output_filepath
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_filepath=output_filepath
+        self.__logger=logger
 
     def run(self):
         # Get input files
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.db"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Concatenate personae
-        self.logger.info("Start concatenating personae...")
-        with sqlite3.connect(self.output_filepath) as conn:
+        self.__logger.info("Start concatenating personae...")
+        with sqlite3.connect(self.__output_filepath) as conn:
             cur = conn.cursor()
 
             # Create table to concatenate personae
@@ -39,7 +39,7 @@ class MCConcatPersonae:
 
             # Insert records from each DB
             for input_file in input_files:
-                self.logger.info(f"Processing '{input_file.name}'")
+                self.__logger.info(f"Processing '{input_file.name}'")
 
                 # Attach as temp DB
                 cur.execute(f"ATTACH DATABASE '{str(input_file)}' AS tmpdb;")
@@ -58,4 +58,4 @@ class MCConcatPersonae:
                 # Detach temp DB
                 cur.execute("DETACH tmpdb;")
 
-        self.logger.info("Finished concatenating personae")
+        self.__logger.info("Finished concatenating personae")

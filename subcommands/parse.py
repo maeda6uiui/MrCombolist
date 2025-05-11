@@ -28,13 +28,13 @@ class MCParse:
         start_index: int,
         end_index: int,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_root_dirname=output_root_dirname
-        self.schema_detection_log_dirname=schema_detection_log_dirname
-        self.max_line_length=max_line_length
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_root_dirname=output_root_dirname
+        self.__schema_detection_log_dirname=schema_detection_log_dirname
+        self.__max_line_length=max_line_length
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def __parse_email_poh(self,line: str, delimiter: str) -> ParseResult:
         result = ParseResult()
@@ -78,29 +78,29 @@ class MCParse:
     
     def run(self):
         # Get all gzip files in the input directory
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.txt.gz"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create output directory
-        output_root_dir = Path(self.output_root_dirname)
+        output_root_dir = Path(self.__output_root_dirname)
         output_root_dir.mkdir(exist_ok=True, parents=True)
 
         # Open log directory of schema detection
-        schema_detection_log_dir = Path(self.schema_detection_log_dirname)
+        schema_detection_log_dir = Path(self.__schema_detection_log_dirname)
 
         # Create a subset of the list if either the start or the end index is specified
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else len(input_files)
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else len(input_files)
 
         input_files = input_files[start_index:end_index]
 
         # Parse
-        self.logger.info("Start parsing the files...")
+        self.__logger.info("Start parsing the files...")
         for input_file in input_files:
-            self.logger.info(f"Processing '{input_file.name}'")
+            self.__logger.info(f"Processing '{input_file.name}'")
 
             # Get scheme detection result
             schema_detection_log_file = schema_detection_log_dir.joinpath(
@@ -121,7 +121,7 @@ class MCParse:
             parse_results: list[ParseResult] = []
             with gzip.open(input_file, "rt", encoding="utf-8") as rt:
                 for line in rt:
-                    line = line[:self.max_line_length].strip()
+                    line = line[:self.__max_line_length].strip()
 
                     parse_result = ParseResult()
                     if placement == "email:poh":
@@ -160,4 +160,4 @@ class MCParse:
                     if parse_result.error:
                         w.write(f"{idx}\n")
 
-        self.logger.info("Finished parsing the files")
+        self.__logger.info("Finished parsing the files")

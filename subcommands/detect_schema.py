@@ -16,14 +16,14 @@ class MCDetectSchema:
         start_index: int,
         end_index: int,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.log_dirname=log_dirname
-        self.delimiter_candidates=delimiter_candidates
-        self.max_num_lines=max_num_lines
-        self.max_line_length=max_line_length
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__log_dirname=log_dirname
+        self.__delimiter_candidates=delimiter_candidates
+        self.__max_num_lines=max_num_lines
+        self.__max_line_length=max_line_length
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def __detect_schema(
         self,
@@ -79,42 +79,42 @@ class MCDetectSchema:
 
     def run(self):
         # Get all gzip files in the input directory
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.txt.gz"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create a directory for schema detection logs
-        log_dir = Path(self.log_dirname)
+        log_dir = Path(self.__log_dirname)
         log_dir.mkdir(exist_ok=True, parents=True)
 
         # Set up regular expressions
-        r_email_head = re.compile(r"^\S+@\S+\.\S+" + f"[{self.delimiter_candidates}]")
-        r_email_tail = re.compile(f"[{self.delimiter_candidates}]+" + r"\S+@\S+\.\S+$")
+        r_email_head = re.compile(r"^\S+@\S+\.\S+" + f"[{self.__delimiter_candidates}]")
+        r_email_tail = re.compile(f"[{self.__delimiter_candidates}]+" + r"\S+@\S+\.\S+$")
         r_email_middle = re.compile(
-            f"[{self.delimiter_candidates}]+" + r"\S+@\S+\.\S+" + f"[{self.delimiter_candidates}]"
+            f"[{self.__delimiter_candidates}]+" + r"\S+@\S+\.\S+" + f"[{self.__delimiter_candidates}]"
         )
         r_email_only = re.compile(r"^\S+@\S+\.\S+$")
 
         # Create a subset of the list if either the start or the end index is specified
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else len(input_files)
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else len(input_files)
 
         input_files = input_files[start_index:end_index]
 
         # Detect schema
-        self.logger.info("Starting schema detection...")
+        self.__logger.info("Starting schema detection...")
         for input_file in input_files:
-            self.logger.info(f"Processing '{input_file.name}'")
+            self.__logger.info(f"Processing '{input_file.name}'")
 
             lines = []
             with gzip.open(input_file, "rt", encoding="utf-8") as rt:
                 for idx, line in enumerate(rt):
-                    if idx > self.max_num_lines:
+                    if idx > self.__max_num_lines:
                         break
 
-                    line = line[:self.max_line_length].strip()
+                    line = line[:self.__max_line_length].strip()
                     lines.append(line)
 
             schema = self.__detect_schema(
@@ -128,4 +128,4 @@ class MCDetectSchema:
             with log_file.open("w", encoding="utf-8") as w:
                 json.dump(schema_detection_result, w, ensure_ascii=False)
 
-        self.logger.info("Finished schema detection")
+        self.__logger.info("Finished schema detection")

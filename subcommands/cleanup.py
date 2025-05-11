@@ -9,35 +9,35 @@ class MCCleanup:
         start_index: int,
         end_index: int,
         logger:Logger):
-        self.input_root_dirname=input_root_dirname
-        self.output_root_dirname=output_root_dirname
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_root_dirname=input_root_dirname
+        self.__output_root_dirname=output_root_dirname
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def run(self):
         # Get the number of folders in the input directory
-        input_root_dir = Path(self.input_root_dirname)
+        input_root_dir = Path(self.__input_root_dirname)
         input_dirs = input_root_dir.glob("*")
         input_dirs = [f for f in input_dirs if f.is_dir()]
         input_dirs.sort()
 
-        self.logger.info(f"{len(input_dirs)} folders exist in the input directory")
+        self.__logger.info(f"{len(input_dirs)} folders exist in the input directory")
 
         # Create output directory
-        output_root_dir = Path(self.output_root_dirname)
+        output_root_dir = Path(self.__output_root_dirname)
         output_root_dir.mkdir(exist_ok=True, parents=True)
 
         # Create a subset of the list if either the start or the end index is specified
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else len(input_dirs)
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else len(input_dirs)
 
         input_dirs = input_dirs[start_index:end_index]
 
         # Cleanup
-        self.logger.info("Start cleaning up the files...")
+        self.__logger.info("Start cleaning up the files...")
         for input_dir in input_dirs:
-            self.logger.info(f"Processing '{input_dir.name}'")
+            self.__logger.info(f"Processing '{input_dir.name}'")
 
             # Create output directory
             output_dir = output_root_dir.joinpath(input_dir.name)
@@ -67,4 +67,4 @@ class MCCleanup:
                 for error_index in error_indices:
                     w.write(f"{error_index}\n")
 
-        self.logger.info("Finished cleaning up the files")
+        self.__logger.info("Finished cleaning up the files")

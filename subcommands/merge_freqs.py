@@ -10,11 +10,11 @@ class MCMergeFreqs:
         gather_local: bool,
         merge_local: bool,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_filepath=output_filepath
-        self.gather_local=gather_local
-        self.merge_local=merge_local
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_filepath=output_filepath
+        self.__gather_local=gather_local
+        self.__merge_local=merge_local
+        self.__logger=logger
 
     def __fn_gather_local(self,input_dirname: str, output_filepath: str):
         # Get input files
@@ -22,10 +22,10 @@ class MCMergeFreqs:
         input_files = list(input_dir.glob("*.db"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create table to gather local frequencies
-        self.logger.info("Creating table to gather local frequencies...")
+        self.__logger.info("Creating table to gather local frequencies...")
         with sqlite3.connect(output_filepath) as conn:
             cur = conn.cursor()
 
@@ -41,12 +41,12 @@ class MCMergeFreqs:
             conn.commit()
 
         # Insert all records of the local frequency tables into the gathering table
-        self.logger.info("Start gathering records from local frequency tables...")
+        self.__logger.info("Start gathering records from local frequency tables...")
         with sqlite3.connect(output_filepath) as conn:
             cur = conn.cursor()
 
             for input_file in input_files:
-                self.logger.info(f"Processing '{input_file.name}'")
+                self.__logger.info(f"Processing '{input_file.name}'")
 
                 # Attach temp DB
                 cur.execute(f"ATTACH DATABASE '{str(input_file)}' AS tmpdb;")
@@ -64,11 +64,11 @@ class MCMergeFreqs:
                 # Detach temp DB
                 cur.execute("DETACH tmpdb;")
 
-        self.logger.info("Finished gathering records from local frequency tables")
+        self.__logger.info("Finished gathering records from local frequency tables")
 
     def __fn_merge_local(self,output_filepath: str):
         # Merge local frequencies
-        self.logger.info("Start merging local frequencies...")
+        self.__logger.info("Start merging local frequencies...")
         with sqlite3.connect(output_filepath) as conn:
             cur = conn.cursor()
 
@@ -99,10 +99,10 @@ class MCMergeFreqs:
             cur.execute("DROP TABLE local_freqs;")
             conn.commit()
 
-        self.logger.info("Finished merging local frequencies")
+        self.__logger.info("Finished merging local frequencies")
 
     def run(self):
-        if self.gather_local:
-            self.__fn_gather_local(self.input_dirname, self.output_filepath)
-        if self.merge_local:
-            self.__fn_merge_local(self.output_filepath)
+        if self.__gather_local:
+            self.__fn_gather_local(self.__input_dirname, self.__output_filepath)
+        if self.__merge_local:
+            self.__fn_merge_local(self.__output_filepath)

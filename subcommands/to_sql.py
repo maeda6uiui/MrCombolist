@@ -14,30 +14,30 @@ class MCToSQL:
         start_index: int,
         end_index: int,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_dirname=output_dirname
-        self.email_freqs_db=email_freqs_db
-        self.poh_freqs_db=poh_freqs_db
-        self.personae_db=personae_db
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_dirname=output_dirname
+        self.__email_freqs_db=email_freqs_db
+        self.__poh_freqs_db=poh_freqs_db
+        self.__personae_db=personae_db
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def run(self):
         # Get all parquet files in the input directory
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.parquet"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create output directory
-        output_dir = Path(self.output_dirname)
+        output_dir = Path(self.__output_dirname)
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Create a subset of the list if either the start or the end index is specified
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else len(input_files)
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else len(input_files)
 
         input_files = input_files[start_index:end_index]
 
@@ -45,22 +45,22 @@ class MCToSQL:
         val_column_name = ""
         table_name = ""
 
-        if self.email_freqs_db:
+        if self.__email_freqs_db:
             val_column_name = "email"
             table_name = "freqs"
-        elif self.poh_freqs_db:
+        elif self.__poh_freqs_db:
             val_column_name = "poh"
             table_name = "freqs"
-        elif self.personae_db:
+        elif self.__personae_db:
             table_name = "personae"
         else:
-            self.logger.error("Must specify the type of DB to be created")
+            self.__logger.error("Must specify the type of DB to be created")
             return
 
         # Convert to sql
-        self.logger.info("Start converting to sql...")
+        self.__logger.info("Start converting to sql...")
         for input_file in input_files:
-            self.logger.info(f"Processing '{input_file.name}'")
+            self.__logger.info(f"Processing '{input_file.name}'")
 
             # Load input file
             df = pd.read_parquet(input_file)
@@ -74,4 +74,4 @@ class MCToSQL:
             with sqlite3.connect(db_file) as conn:
                 df.to_sql(table_name, conn, if_exists="replace")
 
-        self.logger.info("Finished converting to sql")
+        self.__logger.info("Finished converting to sql")

@@ -10,22 +10,22 @@ class MCCountLocalFreqs:
         start_index: int,
         end_index: int,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_root_dirname=output_root_dirname
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_root_dirname=output_root_dirname
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def run(self):
         # Get all parquet files in the input directory
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.parquet"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Create output directories
-        output_root_dir = Path(self.output_root_dirname)
+        output_root_dir = Path(self.__output_root_dirname)
         output_root_dir.mkdir(exist_ok=True, parents=True)
 
         email_output_dir = output_root_dir.joinpath("Email")
@@ -35,15 +35,15 @@ class MCCountLocalFreqs:
         poh_output_dir.mkdir(exist_ok=True)
 
         # Create a subset of the list if either the start or the end index is specified
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else len(input_files)
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else len(input_files)
 
         input_files = input_files[start_index:end_index]
 
         # Count local frequencies
-        self.logger.info("Start counting local frequencies...")
+        self.__logger.info("Start counting local frequencies...")
         for input_file in input_files:
-            self.logger.info(f"Processing '{input_file.name}'")
+            self.__logger.info(f"Processing '{input_file.name}'")
 
             # Load input file
             df = pd.read_parquet(input_file)
@@ -65,4 +65,4 @@ class MCCountLocalFreqs:
             poh_output_file = poh_output_dir.joinpath(input_file.name)
             df_freq_poh.to_parquet(poh_output_file, index=False)
 
-        self.logger.info("Finished counting local frequencies")
+        self.__logger.info("Finished counting local frequencies")

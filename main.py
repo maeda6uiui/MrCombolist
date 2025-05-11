@@ -211,8 +211,6 @@ if __name__=="__main__":
     parser_split.add_argument("-i", "--input-dirname", type=str)
     parser_split.add_argument("-o", "--output-dirname", type=str)
     parser_split.add_argument("-n", "--num-lines-per-split", type=int)
-    parser_split.add_argument("--start-index", type=int)
-    parser_split.add_argument("--end-index", type=int)
     parser_split.set_defaults(handler=split)
 
     #Regroup

@@ -36,48 +36,48 @@ class MCRegroup:
         start_index:int,
         end_index:int,
         logger:Logger):
-        self.input_dirname=input_dirname
-        self.output_dirname=output_dirname
-        self.num_files_per_group=num_files_per_group
-        self.start_index=start_index
-        self.end_index=end_index
-        self.logger=logger
+        self.__input_dirname=input_dirname
+        self.__output_dirname=output_dirname
+        self.__num_files_per_group=num_files_per_group
+        self.__start_index=start_index
+        self.__end_index=end_index
+        self.__logger=logger
 
     def run(self):
         # Get all text files in the input directory
-        input_dir = Path(self.input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.txt"))
         input_files.sort()
 
-        self.logger.info(f"{len(input_files)} files exist in the input directory")
+        self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Calculate the number of groups to be created
-        num_groups = len(input_files) // self.num_files_per_group
-        if len(input_files) % self.num_files_per_group != 0:
+        num_groups = len(input_files) // self.__num_files_per_group
+        if len(input_files) % self.__num_files_per_group != 0:
             num_groups += 1
 
-        self.logger.info(f"Total {num_groups} groups will be created")
+        self.__logger.info(f"Total {num_groups} groups will be created")
 
         # Create output directory
-        output_dir = Path(self.output_dirname)
+        output_dir = Path(self.__output_dirname)
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Create a directory for regrouping logs
-        log_dir = Path(self.log_dirname)
+        log_dir = Path(self.__log_dirname)
         log_dir.mkdir(exist_ok=True, parents=True)
 
         # Set start and end indices
-        start_index = start_index if start_index is not None else 0
-        end_index = end_index if end_index is not None else num_groups
+        start_index = self.__start_index if self.__start_index is not None else 0
+        end_index = self.__end_index if self.__end_index is not None else num_groups
 
         # Regroup
-        self.logger.info("Start regrouping files...")
+        self.__logger.info("Start regrouping files...")
         for i in range(start_index, end_index):
             target_files = input_files[
-                i * self.num_files_per_group : (i + 1) * self.num_files_per_group
+                i * self.__num_files_per_group : (i + 1) * self.__num_files_per_group
             ]
 
-            self.logger.info(f"Creating group {i+1}/{num_groups} with {len(target_files)} files")
+            self.__logger.info(f"Creating group {i+1}/{num_groups} with {len(target_files)} files")
 
             # Concatenate the lines of the input files
             lines = []
@@ -108,4 +108,4 @@ class MCRegroup:
             with log_file.open("w", encoding="utf-8") as w:
                 json.dump(group_info.to_dict(), w, ensure_ascii=False)
 
-        self.logger.info("Finished regrouping the files")
+        self.__logger.info("Finished regrouping the files")
