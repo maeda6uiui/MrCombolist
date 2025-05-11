@@ -3,6 +3,7 @@ import sqlite3
 from logging import Logger
 from pathlib import Path
 
+
 class MCToSQL:
     def __init__(
         self,
@@ -13,15 +14,16 @@ class MCToSQL:
         personae_db: bool,
         start_index: int,
         end_index: int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_dirname=output_dirname
-        self.__email_freqs_db=email_freqs_db
-        self.__poh_freqs_db=poh_freqs_db
-        self.__personae_db=personae_db
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_dirname = output_dirname
+        self.__email_freqs_db = email_freqs_db
+        self.__poh_freqs_db = poh_freqs_db
+        self.__personae_db = personae_db
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__logger = logger
 
     def run(self):
         # Get all parquet files in the input directory
@@ -37,7 +39,9 @@ class MCToSQL:
 
         # Create a subset of the list if either the start or the end index is specified
         start_index = self.__start_index if self.__start_index is not None else 0
-        end_index = self.__end_index if self.__end_index is not None else len(input_files)
+        end_index = (
+            self.__end_index if self.__end_index is not None else len(input_files)
+        )
 
         input_files = input_files[start_index:end_index]
 

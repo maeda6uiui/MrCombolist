@@ -18,6 +18,7 @@ class ParseResult:
     def to_dict(self) -> dict:
         return {"error": self.error, "email": self.email, "poh": self.poh}
 
+
 class MCParse:
     def __init__(
         self,
@@ -27,16 +28,17 @@ class MCParse:
         max_line_length: int,
         start_index: int,
         end_index: int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_root_dirname=output_root_dirname
-        self.__schema_detection_log_dirname=schema_detection_log_dirname
-        self.__max_line_length=max_line_length
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_root_dirname = output_root_dirname
+        self.__schema_detection_log_dirname = schema_detection_log_dirname
+        self.__max_line_length = max_line_length
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__logger = logger
 
-    def __parse_email_poh(self,line: str, delimiter: str) -> ParseResult:
+    def __parse_email_poh(self, line: str, delimiter: str) -> ParseResult:
         result = ParseResult()
 
         splits = line.split(delimiter, maxsplit=1)
@@ -49,7 +51,7 @@ class MCParse:
 
         return result
 
-    def __parse_poh_email(self,line: str, delimiter: str) -> ParseResult:
+    def __parse_poh_email(self, line: str, delimiter: str) -> ParseResult:
         result = ParseResult()
 
         splits = line.split(delimiter, maxsplit=1)
@@ -63,7 +65,7 @@ class MCParse:
         return result
 
     def __parse_unknown_email_unknown(
-        self,line: str, delimiter: str, r_email_middle: re.Pattern
+        self, line: str, delimiter: str, r_email_middle: re.Pattern
     ) -> ParseResult:
         result = ParseResult()
 
@@ -75,7 +77,7 @@ class MCParse:
             result.email = m.group().replace(delimiter, "")
 
         return result
-    
+
     def run(self):
         # Get all gzip files in the input directory
         input_dir = Path(self.__input_dirname)
@@ -93,7 +95,9 @@ class MCParse:
 
         # Create a subset of the list if either the start or the end index is specified
         start_index = self.__start_index if self.__start_index is not None else 0
-        end_index = self.__end_index if self.__end_index is not None else len(input_files)
+        end_index = (
+            self.__end_index if self.__end_index is not None else len(input_files)
+        )
 
         input_files = input_files[start_index:end_index]
 
@@ -121,7 +125,7 @@ class MCParse:
             parse_results: list[ParseResult] = []
             with gzip.open(input_file, "rt", encoding="utf-8") as rt:
                 for line in rt:
-                    line = line[:self.__max_line_length].strip()
+                    line = line[: self.__max_line_length].strip()
 
                     parse_result = ParseResult()
                     if placement == "email:poh":

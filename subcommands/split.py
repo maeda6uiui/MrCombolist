@@ -3,17 +3,19 @@ from logging import Logger
 from pathlib import Path
 from tqdm import tqdm
 
+
 class MCSplit:
     def __init__(
         self,
-        input_dirname:str,
-        output_dirname:str,
-        num_lines_per_split:int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_dirname=output_dirname
-        self.__num_lines_per_split=num_lines_per_split
-        self.__logger=logger
+        input_dirname: str,
+        output_dirname: str,
+        num_lines_per_split: int,
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_dirname = output_dirname
+        self.__num_lines_per_split = num_lines_per_split
+        self.__logger = logger
 
     def run(self):
         # Get all text files in the input directory
@@ -47,7 +49,9 @@ class MCSplit:
 
                 for i in range(num_chunks):
                     chunk_lines = lines[
-                        i * self.__num_lines_per_split : (i + 1) * self.__num_lines_per_split
+                        i
+                        * self.__num_lines_per_split : (i + 1)
+                        * self.__num_lines_per_split
                     ]
 
                     output_file = output_dir.joinpath(f"{input_file.stem}-{i}.txt")

@@ -2,17 +2,19 @@ from logging import Logger
 from pathlib import Path
 from tqdm import tqdm
 
+
 class MCCollectCleanupErrorRecords:
     def __init__(
         self,
         parsing_root_dirname: str,
         cleanup_root_dirname: str,
         output_dirname: str,
-        logger:Logger):
-        self.__parsing_root_dirname=parsing_root_dirname
-        self.__cleanup_root_dirname=cleanup_root_dirname
-        self.__output_dirname=output_dirname
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__parsing_root_dirname = parsing_root_dirname
+        self.__cleanup_root_dirname = cleanup_root_dirname
+        self.__output_dirname = output_dirname
+        self.__logger = logger
 
     def run(self):
         # Get all folders in the parsing directory
@@ -20,7 +22,9 @@ class MCCollectCleanupErrorRecords:
         parsing_dirs = parsing_root_dir.glob("*")
         parsing_dirs = [f for f in parsing_dirs if f.is_dir()]
 
-        self.__logger.info(f"{len(parsing_dirs)} folders exist in the parsing directory")
+        self.__logger.info(
+            f"{len(parsing_dirs)} folders exist in the parsing directory"
+        )
 
         # Get all folders in the cleanup directory
         cleanup_root_dir = Path(self.__cleanup_root_dirname)
@@ -28,14 +32,18 @@ class MCCollectCleanupErrorRecords:
         cleanup_dirs = [f for f in cleanup_dirs if f.is_dir()]
         cleanup_dirs.sort()
 
-        self.__logger.info(f"{len(cleanup_dirs)} folders exist in the cleanup directory")
+        self.__logger.info(
+            f"{len(cleanup_dirs)} folders exist in the cleanup directory"
+        )
 
         # Create output directory
         output_dir = Path(self.__output_dirname)
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Collect error records of the cleanup process
-        self.__logger.info("Starting to collect error records of the cleanup process...")
+        self.__logger.info(
+            "Starting to collect error records of the cleanup process..."
+        )
         for cleanup_dir in tqdm(cleanup_dirs):
             # Get error line indices
             error_indices: list[int] = []

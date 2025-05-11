@@ -5,6 +5,7 @@ from collections import Counter
 from logging import Logger
 from pathlib import Path
 
+
 class MCDetectSchema:
     def __init__(
         self,
@@ -15,15 +16,16 @@ class MCDetectSchema:
         max_line_length: int,
         start_index: int,
         end_index: int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__log_dirname=log_dirname
-        self.__delimiter_candidates=delimiter_candidates
-        self.__max_num_lines=max_num_lines
-        self.__max_line_length=max_line_length
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__log_dirname = log_dirname
+        self.__delimiter_candidates = delimiter_candidates
+        self.__max_num_lines = max_num_lines
+        self.__max_line_length = max_line_length
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__logger = logger
 
     def __detect_schema(
         self,
@@ -31,7 +33,8 @@ class MCDetectSchema:
         r_email_head: re.Pattern,
         r_email_tail: re.Pattern,
         r_email_middle: re.Pattern,
-        r_email_only: re.Pattern) -> dict[str, str]:
+        r_email_only: re.Pattern,
+    ) -> dict[str, str]:
         schema = {"placement": "n/a", "delimiter": "n/a"}
 
         if len(lines) == 0:
@@ -91,15 +94,21 @@ class MCDetectSchema:
 
         # Set up regular expressions
         r_email_head = re.compile(r"^\S+@\S+\.\S+" + f"[{self.__delimiter_candidates}]")
-        r_email_tail = re.compile(f"[{self.__delimiter_candidates}]+" + r"\S+@\S+\.\S+$")
+        r_email_tail = re.compile(
+            f"[{self.__delimiter_candidates}]+" + r"\S+@\S+\.\S+$"
+        )
         r_email_middle = re.compile(
-            f"[{self.__delimiter_candidates}]+" + r"\S+@\S+\.\S+" + f"[{self.__delimiter_candidates}]"
+            f"[{self.__delimiter_candidates}]+"
+            + r"\S+@\S+\.\S+"
+            + f"[{self.__delimiter_candidates}]"
         )
         r_email_only = re.compile(r"^\S+@\S+\.\S+$")
 
         # Create a subset of the list if either the start or the end index is specified
         start_index = self.__start_index if self.__start_index is not None else 0
-        end_index = self.__end_index if self.__end_index is not None else len(input_files)
+        end_index = (
+            self.__end_index if self.__end_index is not None else len(input_files)
+        )
 
         input_files = input_files[start_index:end_index]
 
@@ -114,7 +123,7 @@ class MCDetectSchema:
                     if idx > self.__max_num_lines:
                         break
 
-                    line = line[:self.__max_line_length].strip()
+                    line = line[: self.__max_line_length].strip()
                     lines.append(line)
 
             schema = self.__detect_schema(

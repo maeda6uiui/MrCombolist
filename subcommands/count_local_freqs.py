@@ -2,6 +2,7 @@ import pandas as pd
 from logging import Logger
 from pathlib import Path
 
+
 class MCCountLocalFreqs:
     def __init__(
         self,
@@ -9,12 +10,13 @@ class MCCountLocalFreqs:
         output_root_dirname: str,
         start_index: int,
         end_index: int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_root_dirname=output_root_dirname
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_root_dirname = output_root_dirname
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__logger = logger
 
     def run(self):
         # Get all parquet files in the input directory
@@ -36,7 +38,9 @@ class MCCountLocalFreqs:
 
         # Create a subset of the list if either the start or the end index is specified
         start_index = self.__start_index if self.__start_index is not None else 0
-        end_index = self.__end_index if self.__end_index is not None else len(input_files)
+        end_index = (
+            self.__end_index if self.__end_index is not None else len(input_files)
+        )
 
         input_files = input_files[start_index:end_index]
 
@@ -60,7 +64,10 @@ class MCCountLocalFreqs:
 
             # Count value frequencies of "poh" column and save it to a file
             df_freq_poh = (
-                df["poh"].value_counts().to_frame(name="freq").reset_index(names=["poh"])
+                df["poh"]
+                .value_counts()
+                .to_frame(name="freq")
+                .reset_index(names=["poh"])
             )
             poh_output_file = poh_output_dir.joinpath(input_file.name)
             df_freq_poh.to_parquet(poh_output_file, index=False)

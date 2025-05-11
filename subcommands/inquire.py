@@ -3,6 +3,7 @@ import sqlite3
 from logging import Logger
 from pathlib import Path
 
+
 class MCInquire:
     def __init__(
         self,
@@ -11,15 +12,18 @@ class MCInquire:
         query: str,
         max_num_records_to_print: int,
         num_records_for_logging: int,
-        logger:Logger):
-        self.__db_filepath=db_filepath
-        self.__output_filepath=output_filepath
-        self.__query=query
-        self.__max_num_records_to_print=max_num_records_to_print
-        self.__num_records_for_logging=num_records_for_logging
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__db_filepath = db_filepath
+        self.__output_filepath = output_filepath
+        self.__query = query
+        self.__max_num_records_to_print = max_num_records_to_print
+        self.__num_records_for_logging = num_records_for_logging
+        self.__logger = logger
 
-    def __print_records(self,db_filepath: str, query: str, max_num_records_to_print: int):
+    def __print_records(
+        self, db_filepath: str, query: str, max_num_records_to_print: int
+    ):
         with sqlite3.connect(db_filepath) as conn:
             cur = conn.cursor()
             cur.execute(query)
@@ -77,9 +81,15 @@ class MCInquire:
 
         # Print query result
         if self.__output_filepath is None:
-            self.__print_records(self.__db_filepath, self.__query, self.__max_num_records_to_print)
+            self.__print_records(
+                self.__db_filepath, self.__query, self.__max_num_records_to_print
+            )
         # Export to a gzipped TSV file
         else:
             self.__export_records(
-                self.__db_filepath, self.__query, self.__output_filepath, self.__num_records_for_logging, self.__logger
+                self.__db_filepath,
+                self.__query,
+                self.__output_filepath,
+                self.__num_records_for_logging,
+                self.__logger,
             )

@@ -27,21 +27,23 @@ class GroupInfo:
             "partitions": [v.to_dict() for v in self.partitions],
         }
 
+
 class MCRegroup:
     def __init__(
         self,
-        input_dirname:str,
-        output_dirname:str,
-        num_files_per_group:int,
-        start_index:int,
-        end_index:int,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_dirname=output_dirname
-        self.__num_files_per_group=num_files_per_group
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__logger=logger
+        input_dirname: str,
+        output_dirname: str,
+        num_files_per_group: int,
+        start_index: int,
+        end_index: int,
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_dirname = output_dirname
+        self.__num_files_per_group = num_files_per_group
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__logger = logger
 
     def run(self):
         # Get all text files in the input directory
@@ -77,7 +79,9 @@ class MCRegroup:
                 i * self.__num_files_per_group : (i + 1) * self.__num_files_per_group
             ]
 
-            self.__logger.info(f"Creating group {i+1}/{num_groups} with {len(target_files)} files")
+            self.__logger.info(
+                f"Creating group {i+1}/{num_groups} with {len(target_files)} files"
+            )
 
             # Concatenate the lines of the input files
             lines = []

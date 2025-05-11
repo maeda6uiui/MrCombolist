@@ -2,15 +2,12 @@ import sqlite3
 from logging import Logger
 from pathlib import Path
 
+
 class MCConcatPersonae:
-    def __init__(
-        self,
-        input_dirname: str,
-        output_filepath: str,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_filepath=output_filepath
-        self.__logger=logger
+    def __init__(self, input_dirname: str, output_filepath: str, logger: Logger):
+        self.__input_dirname = input_dirname
+        self.__output_filepath = output_filepath
+        self.__logger = logger
 
     def run(self):
         # Get input files

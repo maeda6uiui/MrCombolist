@@ -4,17 +4,19 @@ from logging import Logger
 from pathlib import Path
 from tqdm import tqdm
 
+
 class MCFlatten:
     def __init__(
         self,
-        input_root_dirname:str,
-        output_dirname:str,
-        log_filepath:str,
-        logger:Logger):
-        self.__input_root_dirname=input_root_dirname
-        self.__output_dirname=output_dirname
-        self.__log_filepath=log_filepath
-        self.__logger=logger
+        input_root_dirname: str,
+        output_dirname: str,
+        log_filepath: str,
+        logger: Logger,
+    ):
+        self.__input_root_dirname = input_root_dirname
+        self.__output_dirname = output_dirname
+        self.__log_filepath = log_filepath
+        self.__logger = logger
 
     def run(self):
         # Get list of all "text" files in the input directory

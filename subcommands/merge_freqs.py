@@ -2,6 +2,7 @@ import sqlite3
 from logging import Logger
 from pathlib import Path
 
+
 class MCMergeFreqs:
     def __init__(
         self,
@@ -9,14 +10,15 @@ class MCMergeFreqs:
         output_filepath: str,
         gather_local: bool,
         merge_local: bool,
-        logger:Logger):
-        self.__input_dirname=input_dirname
-        self.__output_filepath=output_filepath
-        self.__gather_local=gather_local
-        self.__merge_local=merge_local
-        self.__logger=logger
+        logger: Logger,
+    ):
+        self.__input_dirname = input_dirname
+        self.__output_filepath = output_filepath
+        self.__gather_local = gather_local
+        self.__merge_local = merge_local
+        self.__logger = logger
 
-    def __fn_gather_local(self,input_dirname: str, output_filepath: str):
+    def __fn_gather_local(self, input_dirname: str, output_filepath: str):
         # Get input files
         input_dir = Path(input_dirname)
         input_files = list(input_dir.glob("*.db"))
@@ -66,7 +68,7 @@ class MCMergeFreqs:
 
         self.__logger.info("Finished gathering records from local frequency tables")
 
-    def __fn_merge_local(self,output_filepath: str):
+    def __fn_merge_local(self, output_filepath: str):
         # Merge local frequencies
         self.__logger.info("Start merging local frequencies...")
         with sqlite3.connect(output_filepath) as conn:

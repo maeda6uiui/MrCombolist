@@ -8,25 +8,27 @@ from pathlib import Path
 SHUTIL_SUPPORTED_EXTENSIONS = ["zip", "tar", "tar.gz", "tar.bz", "tar.xz"]
 UNRAR_SUPPORTED_EXTENSIONS = ["rar"]
 
+
 class MCUnarchive:
     def __init__(
         self,
-        input_root_dirname:str,
-        output_root_dirname:str,
-        log_dirname:str,
-        start_index:int,
-        end_index:int,
-        unrar_tool_filepath:str,
-        logger:Logger):
-        self.__input_root_dirname=input_root_dirname
-        self.__output_root_dirname=output_root_dirname
-        self.__log_dirname=log_dirname
-        self.__start_index=start_index
-        self.__end_index=end_index
-        self.__unrar_tool_filepath=unrar_tool_filepath
-        self.__logger=logger
+        input_root_dirname: str,
+        output_root_dirname: str,
+        log_dirname: str,
+        start_index: int,
+        end_index: int,
+        unrar_tool_filepath: str,
+        logger: Logger,
+    ):
+        self.__input_root_dirname = input_root_dirname
+        self.__output_root_dirname = output_root_dirname
+        self.__log_dirname = log_dirname
+        self.__start_index = start_index
+        self.__end_index = end_index
+        self.__unrar_tool_filepath = unrar_tool_filepath
+        self.__logger = logger
 
-    def __str_endswith_any(self,given: str, candidates: list[str]) -> bool:
+    def __str_endswith_any(self, given: str, candidates: list[str]) -> bool:
         for candidate in candidates:
             if given.endswith(candidate):
                 return True
@@ -81,7 +83,9 @@ class MCUnarchive:
 
         # Create a subset of the list if either the start or the end index is specified
         start_index = self.__start_index if self.__start_index is not None else 0
-        end_index = self.__end_index if self.__end_index is not None else len(input_files)
+        end_index = (
+            self.__end_index if self.__end_index is not None else len(input_files)
+        )
 
         input_files = input_files[start_index:end_index]
 
@@ -102,10 +106,14 @@ class MCUnarchive:
             unarchive_result = {}
             try:
                 # Files that can be unarchived with shutil
-                if self.__str_endswith_any(input_file.name.lower(), SHUTIL_SUPPORTED_EXTENSIONS):
+                if self.__str_endswith_any(
+                    input_file.name.lower(), SHUTIL_SUPPORTED_EXTENSIONS
+                ):
                     shutil.unpack_archive(input_file, output_dir)
                 # Files that can be unarchived with the unrar tool
-                elif self.__str_endswith_any(input_file.name.lower(), UNRAR_SUPPORTED_EXTENSIONS):
+                elif self.__str_endswith_any(
+                    input_file.name.lower(), UNRAR_SUPPORTED_EXTENSIONS
+                ):
                     with rarfile.RarFile(input_file) as rf:
                         rf.extractall(path=output_dir)
             except Exception as e:
