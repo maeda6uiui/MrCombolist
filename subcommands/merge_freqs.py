@@ -18,9 +18,9 @@ class MCMergeFreqs:
         self.__merge_local = merge_local
         self.__logger = logger
 
-    def __fn_gather_local(self, input_dirname: str, output_filepath: str):
+    def __fn_gather_local(self):
         # Get input files
-        input_dir = Path(input_dirname)
+        input_dir = Path(self.__input_dirname)
         input_files = list(input_dir.glob("*.db"))
         input_files.sort()
 
@@ -28,7 +28,7 @@ class MCMergeFreqs:
 
         # Create table to gather local frequencies
         self.__logger.info("Creating table to gather local frequencies...")
-        with sqlite3.connect(output_filepath) as conn:
+        with sqlite3.connect(self.__output_filepath) as conn:
             cur = conn.cursor()
 
             cur.execute(
@@ -44,7 +44,7 @@ class MCMergeFreqs:
 
         # Insert all records of the local frequency tables into the gathering table
         self.__logger.info("Start gathering records from local frequency tables...")
-        with sqlite3.connect(output_filepath) as conn:
+        with sqlite3.connect(self.__output_filepath) as conn:
             cur = conn.cursor()
 
             for input_file in input_files:
@@ -68,10 +68,10 @@ class MCMergeFreqs:
 
         self.__logger.info("Finished gathering records from local frequency tables")
 
-    def __fn_merge_local(self, output_filepath: str):
+    def __fn_merge_local(self):
         # Merge local frequencies
         self.__logger.info("Start merging local frequencies...")
-        with sqlite3.connect(output_filepath) as conn:
+        with sqlite3.connect(self.__output_filepath) as conn:
             cur = conn.cursor()
 
             # Create table to merge frequencies
