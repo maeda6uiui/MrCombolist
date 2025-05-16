@@ -33,6 +33,7 @@ class MCRegroup:
         self,
         input_dirname: str,
         output_dirname: str,
+        log_dirname: str,
         num_files_per_group: int,
         start_index: int,
         end_index: int,
@@ -40,6 +41,7 @@ class MCRegroup:
     ):
         self.__input_dirname = input_dirname
         self.__output_dirname = output_dirname
+        self.__log_dirname = log_dirname
         self.__num_files_per_group = num_files_per_group
         self.__start_index = start_index
         self.__end_index = end_index

@@ -52,6 +52,7 @@ def regroup(args, logger: Logger):
     runner = MCRegroup(
         args.input_dirname,
         args.output_dirname,
+        args.log_dirname,
         args.num_files_per_group,
         args.start_index,
         args.end_index,
