@@ -43,8 +43,6 @@ def split(args, logger: Logger):
         args.input_dirname,
         args.output_dirname,
         args.num_lines_per_split,
-        args.start_index,
-        args.end_index,
         logger,
     )
     runner.run()
