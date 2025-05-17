@@ -4,7 +4,7 @@ from logging import Logger
 from pathlib import Path
 
 
-class MCToSQL:
+class MCToSQLite:
     def __init__(
         self,
         input_dirname: str,
