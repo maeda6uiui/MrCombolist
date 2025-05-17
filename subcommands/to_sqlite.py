@@ -61,8 +61,8 @@ class MCToSQLite:
             self.__logger.error("Must specify the type of DB to be created")
             return
 
-        # Convert to sql
-        self.__logger.info("Start converting to sql...")
+        # Convert to SQLite DB
+        self.__logger.info("Start converting to SQLite DB...")
         for input_file in input_files:
             self.__logger.info(f"Processing '{input_file.name}'")
 
@@ -73,9 +73,9 @@ class MCToSQLite:
             if val_column_name != "":
                 df.rename(columns={val_column_name: "word"}, inplace=True)
 
-            # Create connection and output to sql
+            # Create connection and output to SQLite DB
             db_file = output_dir.joinpath(f"{input_file.stem}.db")
             with sqlite3.connect(db_file) as conn:
                 df.to_sql(table_name, conn, if_exists="replace")
 
-        self.__logger.info("Finished converting to sql")
+        self.__logger.info("Finished converting to SQLite DB")
