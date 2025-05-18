@@ -11,7 +11,7 @@ from subcommands.parse import MCParse
 from subcommands.cleanup import MCCleanup
 from subcommands.to_parquet import MCToParquet
 from subcommands.count_local_freqs import MCCountLocalFreqs
-from subcommands.to_sql import MCToSQL
+from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
@@ -132,8 +132,8 @@ def count_local_freqs(args, logger: Logger):
     runner.run()
 
 
-def to_sql(args, logger: Logger):
-    runner = MCToSQL(
+def to_sqlite(args, logger: Logger):
+    runner = MCToSQLite(
         args.input_dirname,
         args.output_dirname,
         args.email_freqs_db,
@@ -289,15 +289,15 @@ if __name__ == "__main__":
     parser_count_local_freqs.set_defaults(handler=count_local_freqs)
 
     # Convert to SQLite DB
-    parser_to_sql = subparsers.add_parser("to-sql")
-    parser_to_sql.add_argument("-i", "--input-dirname", type=str)
-    parser_to_sql.add_argument("-o", "--output-dirname", type=str)
-    parser_to_sql.add_argument("--email-freqs-db", action="store_true")
-    parser_to_sql.add_argument("--poh-freqs-db", action="store_true")
-    parser_to_sql.add_argument("--personae-db", action="store_true")
-    parser_to_sql.add_argument("--start-index", type=int)
-    parser_to_sql.add_argument("--end-index", type=int)
-    parser_to_sql.set_defaults(handler=to_sql)
+    parser_to_sqlite = subparsers.add_parser("to-sqlite")
+    parser_to_sqlite.add_argument("-i", "--input-dirname", type=str)
+    parser_to_sqlite.add_argument("-o", "--output-dirname", type=str)
+    parser_to_sqlite.add_argument("--email-freqs-db", action="store_true")
+    parser_to_sqlite.add_argument("--poh-freqs-db", action="store_true")
+    parser_to_sqlite.add_argument("--personae-db", action="store_true")
+    parser_to_sqlite.add_argument("--start-index", type=int)
+    parser_to_sqlite.add_argument("--end-index", type=int)
+    parser_to_sqlite.set_defaults(handler=to_sqlite)
 
     # Merge freqs
     parser_merge_freqs = subparsers.add_parser("merge-freqs")

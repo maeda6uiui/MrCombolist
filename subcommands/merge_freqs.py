@@ -105,6 +105,6 @@ class MCMergeFreqs:
 
     def run(self):
         if self.__gather_local:
-            self.__fn_gather_local(self.__input_dirname, self.__output_filepath)
+            self.__fn_gather_local()
         if self.__merge_local:
-            self.__fn_merge_local(self.__output_filepath)
+            self.__fn_merge_local()
