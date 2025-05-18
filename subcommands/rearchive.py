@@ -1,4 +1,4 @@
-import gzip
+import pgzip
 from logging import Logger
 from pathlib import Path
 
@@ -44,7 +44,7 @@ class MCRearchive:
             self.__logger.info(f"Creating archive of {input_file.name}")
 
             output_file = output_dir.joinpath(f"{input_file.name}.gz")
-            with gzip.open(output_file, "wt", encoding="utf-8") as wt:
+            with pgzip.open(output_file, "wt", encoding="utf-8") as wt:
                 with input_file.open("r", encoding="utf-8") as r:
                     for line in r:
                         line = line.strip()
