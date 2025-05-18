@@ -74,15 +74,7 @@ class MCInquire:
 
         # Print query result
         if self.__output_filepath is None:
-            self.__print_records(
-                self.__db_filepath, self.__query, self.__max_num_records_to_print
-            )
+            self.__print_records()
         # Export to a gzipped TSV file
         else:
-            self.__export_records(
-                self.__db_filepath,
-                self.__query,
-                self.__output_filepath,
-                self.__num_records_for_logging,
-                self.__logger,
-            )
+            self.__export_records()
