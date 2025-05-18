@@ -21,13 +21,21 @@ class MCInquire:
         self.__num_records_for_logging = num_records_for_logging
         self.__logger = logger
 
-    def __print_records(self):
+    def __get_records(self) -> list[tuple]:
+        ret = []
         with sqlite3.connect(self.__db_filepath) as conn:
             cur = conn.cursor()
             cur.execute(self.__query)
             rows = cur.fetchmany(self.__max_num_records_to_print)
             for row in rows:
-                print(row)
+                ret.append(row)
+
+        return ret
+
+    def __print_records(self):
+        records = self.__get_records()
+        for record in records:
+            print(record)
 
     def __export_records(self):
         # Create output directory
@@ -78,3 +86,7 @@ class MCInquire:
         # Export to a gzipped TSV file
         else:
             self.__export_records()
+
+    def get(self) -> list[tuple]:
+        records = self.__get_records()
+        return records

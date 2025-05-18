@@ -16,6 +16,7 @@ from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
+from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 
 
 def unarchive(args, logger: Logger):
@@ -184,6 +185,20 @@ def inquire(args, logger: Logger):
     runner.run()
 
 
+def generate_pseudo_combos(args, logger: Logger):
+    runner = MCGeneratePseudoCombos(
+        args.word_list_filepath,
+        args.limit_num_words,
+        args.email_domains,
+        args.email_local_part_length,
+        args.delimiter,
+        args.num_combos,
+        args.output_filepath,
+        logger,
+    )
+    runner.run()
+
+
 if __name__ == "__main__":
     # Set up logger
     with open("./logging_config.yaml", "r", encoding="utf-8") as r:
@@ -338,6 +353,29 @@ if __name__ == "__main__":
     parser_inquire.add_argument("--max-num-records-to-print", type=int, default=10)
     parser_inquire.add_argument("--num-records-for-logging", type=int, default=1000000)
     parser_inquire.set_defaults(handler=inquire)
+
+    # Generate pseudo combos
+    parser_generate_pseudo_combos = subparsers.add_parser("generate-pseudo-combos")
+    parser_generate_pseudo_combos.add_argument(
+        "-w", "--word-list-filepath", type=str, default="./Data/rockyou_1M.txt.gz"
+    )
+    parser_generate_pseudo_combos.add_argument(
+        "-nw", "--limit-num-words", type=int, default=-1
+    )
+    parser_generate_pseudo_combos.add_argument(
+        "-e", "--email-domains", type=str, default="example.com"
+    )
+    parser_generate_pseudo_combos.add_argument(
+        "-l", "--email-local-part-length", type=int, default=4
+    )
+    parser_generate_pseudo_combos.add_argument(
+        "-d", "--delimiter", type=str, default=":"
+    )
+    parser_generate_pseudo_combos.add_argument(
+        "-nc", "--num-combos", type=int, default=1000000
+    )
+    parser_generate_pseudo_combos.add_argument("-o", "--output-filepath", type=str)
+    parser_generate_pseudo_combos.set_defaults(handler=generate_pseudo_combos)
     # ==========
 
     # Run subcommand
