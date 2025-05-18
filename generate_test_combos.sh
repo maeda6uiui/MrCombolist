@@ -14,16 +14,16 @@ do
         -e 0.example.com,1.example.com,2.example.com \
         -d ":" \
         -nc 100000 \
-        -o ./tests/Data/delim_colon_100000.txt
+        -o ./tests/Data/Original/delim_colon_100000.txt
     python main.py generate-pseudo-combos \
         -nw 10000 \
         -e 0.example.com,1.example.com,2.example.com \
         -d "|" \
         -nc 100000 \
-        -o ./tests/Data/delim_pipe_100000.txt
+        -o ./tests/Data/Original/delim_pipe_100000.txt
 
     #Create a tarball of the pseudo combos
-    cd ./tests/Data
+    cd ./tests/Data/Original
     tar -zcf \
         test_combos_${i}.tar.gz \
         delim_colon_100000.txt \
@@ -33,5 +33,5 @@ do
     rm delim_colon_100000.txt delim_pipe_100000.txt
 
     #Move to original directory
-    cd ../..
+    cd ../../..
 done
