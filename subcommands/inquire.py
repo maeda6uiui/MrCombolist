@@ -1,4 +1,4 @@
-import gzip
+import pgzip
 import sqlite3
 from logging import Logger
 from pathlib import Path
@@ -46,7 +46,7 @@ class MCInquire:
 
         # Fetch one row at a time and write it to a gzipped TSV file
         self.__logger.info("Start exporting records to a file...")
-        with gzip.open(self.__output_filepath, "wt", encoding="utf-8") as wt:
+        with pgzip.open(self.__output_filepath, "wt", encoding="utf-8") as wt:
             row = cur.fetchone()
             num_records_exported = 0
             while row is not None:
