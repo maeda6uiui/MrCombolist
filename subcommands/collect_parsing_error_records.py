@@ -28,7 +28,7 @@ class MCCollectParsingErrorRecords:
         parsing_dirs.sort()
 
         self.__logger.info(
-            f"{len(parsing_dirs)} folders exist in the cleanup directory"
+            f"{len(parsing_dirs)} folders exist in the parsing directory"
         )
 
         # Create output directory
