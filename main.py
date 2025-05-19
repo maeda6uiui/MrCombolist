@@ -14,7 +14,7 @@ from subcommands.count_local_freqs import MCCountLocalFreqs
 from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
-from subcommands.collect_parse_error_records import MCCollectParsingErrorRecords
+from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
