@@ -14,6 +14,7 @@ from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.inquire import MCInquire
+from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 from logging import getLogger
 from pathlib import Path
 
@@ -39,6 +40,8 @@ def remove_test_artifacts():
         dir_path = Path(f"./tests/Data/{dirname}")
         if dir_path.exists():
             shutil.rmtree(f"./tests/Data/{dirname}")
+
+    Path("./tests/Data/pseudo_combos.txt").unlink(missing_ok=True)
 
 
 @pytest.mark.order(0)
@@ -231,3 +234,18 @@ def test_inquire():
     assert records[2] == (14789, 67)
     assert records[3] == (112233, 65)
     assert records[4] == (98765, 63) or records[4] == (123456, 63)
+
+
+@pytest.mark.order(200)
+def test_generate_pseudo_combos():
+    runner = MCGeneratePseudoCombos(
+        "./Data/rockyou_1M.txt.gz",
+        -1,
+        "example.com",
+        4,
+        ":",
+        1000000,
+        "./tests/Data/pseudo_combos.txt",
+        logger,
+    )
+    runner.run()
