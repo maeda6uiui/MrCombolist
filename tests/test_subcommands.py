@@ -16,6 +16,7 @@ from subcommands.concat_personae import MCConcatPersonae
 from subcommands.inquire import MCInquire
 from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
+from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 from logging import getLogger
 from pathlib import Path
 
@@ -43,6 +44,8 @@ def remove_test_artifacts():
         dir_path = Path(f"./tests/Data/{dirname}")
         if dir_path.exists():
             shutil.rmtree(f"./tests/Data/{dirname}")
+
+    Path("./tests/Data/pseudo_combos.txt").unlink(missing_ok=True)
 
 
 @pytest.mark.order(0)
@@ -254,6 +257,21 @@ def test_collect_cleanup_error_records():
         "./tests/Data/Parse",
         "./tests/Data/Cleanup",
         "./tests/Data/CleanupErrorRecords",
+        logger,
+    )
+    runner.run()
+
+
+@pytest.mark.order(200)
+def test_generate_pseudo_combos():
+    runner = MCGeneratePseudoCombos(
+        "./Data/rockyou_1M.txt.gz",
+        -1,
+        "example.com",
+        4,
+        ":",
+        1000000,
+        "./tests/Data/pseudo_combos.txt",
         logger,
     )
     runner.run()
