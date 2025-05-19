@@ -14,7 +14,7 @@ from subcommands.count_local_freqs import MCCountLocalFreqs
 from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
-from subcommands.collect_parse_error_records import MCCollectParseErrorRecords
+from subcommands.collect_parse_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
@@ -165,7 +165,7 @@ def concat_personae(args, logger: Logger):
 
 
 def collect_parsing_error_records(args, logger: Logger):
-    runner = MCCollectParseErrorRecords(
+    runner = MCCollectParsingErrorRecords(
         args.rearchive_dirname, args.parsing_root_dirname, args.output_dirname, logger
     )
     runner.run()

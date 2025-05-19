@@ -4,7 +4,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 
-class MCCollectParseErrorRecords:
+class MCCollectParsingErrorRecords:
     def __init__(
         self,
         rearchive_dirname: str,
