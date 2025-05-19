@@ -9,4 +9,6 @@
 /Split
 /SQLite
 /Unarchive
+/ParsingErrorRecords
+/CleanupErrorRecords
 /pseudo_combos.txt

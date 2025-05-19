@@ -14,6 +14,8 @@ from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.inquire import MCInquire
+from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
+from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 from logging import getLogger
 from pathlib import Path
@@ -35,6 +37,8 @@ def remove_test_artifacts():
         "Parquet",
         "CountLocalFreqs",
         "SQLite",
+        "ParsingErrorRecords",
+        "CleanupErrorRecords",
     ]
     for dirname in dirnames:
         dir_path = Path(f"./tests/Data/{dirname}")
@@ -235,6 +239,27 @@ def test_inquire():
     assert records[3] == (112233, 65)
     assert records[4] == (98765, 63) or records[4] == (123456, 63)
 
+
+@pytest.mark.order(100)
+def test_collect_parsing_error_records():
+    runner = MCCollectParsingErrorRecords(
+        "./tests/Data/Rearchive",
+        "./tests/Data/Parse",
+        "./tests/Data/ParsingErrorRecords",
+        logger,
+    )
+    runner.run()
+
+
+@pytest.mark.order(101)
+def test_collect_cleanup_error_records():
+    runner = MCCollectCleanupErrorRecords(
+        "./tests/Data/Parse",
+        "./tests/Data/Cleanup",
+        "./tests/Data/CleanupErrorRecords",
+        logger,
+    )
+    runner.run()
 
 @pytest.mark.order(200)
 def test_generate_pseudo_combos():

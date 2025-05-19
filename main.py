@@ -14,6 +14,7 @@ from subcommands.count_local_freqs import MCCountLocalFreqs
 from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
+from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
@@ -160,6 +161,13 @@ def merge_freqs(args, logger: Logger):
 
 def concat_personae(args, logger: Logger):
     runner = MCConcatPersonae(args.input_dirname, args.output_filepath, logger)
+    runner.run()
+
+
+def collect_parsing_error_records(args, logger: Logger):
+    runner = MCCollectParsingErrorRecords(
+        args.rearchive_dirname, args.parsing_root_dirname, args.output_dirname, logger
+    )
     runner.run()
 
 
@@ -327,6 +335,23 @@ if __name__ == "__main__":
     parser_concat_personae.add_argument("-i", "--input-dirname", type=str)
     parser_concat_personae.add_argument("-o", "--output-filepath", type=str)
     parser_concat_personae.set_defaults(handler=concat_personae)
+
+    # Collect parsing error records
+    parser_collect_parsing_error_records = subparsers.add_parser(
+        "collect-parsing-error-records"
+    )
+    parser_collect_parsing_error_records.add_argument(
+        "-ir", "--rearchive-dirname", type=str
+    )
+    parser_collect_parsing_error_records.add_argument(
+        "-ip", "--parsing-root-dirname", type=str
+    )
+    parser_collect_parsing_error_records.add_argument(
+        "-o", "--output-dirname", type=str
+    )
+    parser_collect_parsing_error_records.set_defaults(
+        handler=collect_parsing_error_records
+    )
 
     # Collect cleanup error records
     parser_collect_cleanup_error_records = subparsers.add_parser(
