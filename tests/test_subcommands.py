@@ -261,6 +261,7 @@ def test_collect_cleanup_error_records():
     )
     runner.run()
 
+
 @pytest.mark.order(200)
 def test_generate_pseudo_combos():
     runner = MCGeneratePseudoCombos(
