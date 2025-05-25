@@ -14,6 +14,7 @@ from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.inquire import MCInquire
+from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
@@ -238,6 +239,12 @@ def test_inquire():
     assert records[2] == (14789, 67)
     assert records[3] == (112233, 65)
     assert records[4] == (98765, 63) or records[4] == (123456, 63)
+
+
+@pytest.mark.order(14)
+def test_suggest_chunk_size():
+    runner = MCSuggestChunkSize("./tests/Data/Flatten", 50, logger)
+    assert runner.get() == 100000
 
 
 @pytest.mark.order(100)
