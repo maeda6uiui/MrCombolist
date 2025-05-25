@@ -17,6 +17,7 @@ from subcommands.concat_personae import MCConcatPersonae
 from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
+from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 
 
@@ -190,6 +191,11 @@ def inquire(args, logger: Logger):
         args.num_records_for_logging,
         logger,
     )
+    runner.run()
+
+
+def suggest_chunk_size(args, logger: Logger):
+    runner = MCSuggestChunkSize(args.input_dirname, args.num_files_to_check, logger)
     runner.run()
 
 
@@ -378,6 +384,14 @@ if __name__ == "__main__":
     parser_inquire.add_argument("--max-num-records-to-print", type=int, default=10)
     parser_inquire.add_argument("--num-records-for-logging", type=int, default=1000000)
     parser_inquire.set_defaults(handler=inquire)
+
+    # Suggest chunk size
+    parser_suggest_chunk_size = subparsers.add_parser("suggest-chunk-size")
+    parser_suggest_chunk_size.add_argument("-i", "--input-dirname", type=str)
+    parser_suggest_chunk_size.add_argument(
+        "-n", "--num-files-to-check", type=int, default=50
+    )
+    parser_suggest_chunk_size.set_defaults(handler=suggest_chunk_size)
 
     # Generate pseudo combos
     parser_generate_pseudo_combos = subparsers.add_parser("generate-pseudo-combos")
