@@ -2,6 +2,7 @@ import pytest
 import shutil
 from subcommands.unarchive import MCUnarchive
 from subcommands.flatten import MCFlatten
+from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.split import MCSplit
 from subcommands.regroup import MCRegroup
 from subcommands.rearchive import MCRearchive
@@ -14,7 +15,6 @@ from subcommands.to_sqlite import MCToSQLite
 from subcommands.merge_freqs import MCMergeFreqs
 from subcommands.concat_personae import MCConcatPersonae
 from subcommands.inquire import MCInquire
-from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
@@ -63,7 +63,7 @@ def test_unarchive():
     runner.run()
 
 
-@pytest.mark.order(1)
+@pytest.mark.order(10)
 def test_flatten():
     runner = MCFlatten(
         "./tests/Data/Unarchive",
@@ -74,13 +74,19 @@ def test_flatten():
     runner.run()
 
 
-@pytest.mark.order(2)
+@pytest.mark.order(20)
+def test_suggest_chunk_size():
+    runner = MCSuggestChunkSize("./tests/Data/Flatten", 50, logger)
+    assert runner.get() == 100000
+
+
+@pytest.mark.order(30)
 def test_split():
     runner = MCSplit("./tests/Data/Flatten", "./tests/Data/Split", 50000, logger)
     runner.run()
 
 
-@pytest.mark.order(3)
+@pytest.mark.order(40)
 def test_regroup():
     runner = MCRegroup(
         "./tests/Data/Split",
@@ -94,7 +100,7 @@ def test_regroup():
     runner.run()
 
 
-@pytest.mark.order(4)
+@pytest.mark.order(50)
 def test_rearchive():
     runner = MCRearchive(
         "./tests/Data/Regroup", "./tests/Data/Rearchive", None, None, logger
@@ -102,7 +108,7 @@ def test_rearchive():
     runner.run()
 
 
-@pytest.mark.order(5)
+@pytest.mark.order(60)
 def test_detect_schema():
     runner = MCDetectSchema(
         "./tests/Data/Rearchive",
@@ -117,7 +123,7 @@ def test_detect_schema():
     runner.run()
 
 
-@pytest.mark.order(6)
+@pytest.mark.order(70)
 def test_parse():
     runner = MCParse(
         "./tests/Data/Rearchive",
@@ -131,13 +137,13 @@ def test_parse():
     runner.run()
 
 
-@pytest.mark.order(7)
+@pytest.mark.order(80)
 def test_cleanup():
     runner = MCCleanup("./tests/Data/Parse", "./tests/Data/Cleanup", None, None, logger)
     runner.run()
 
 
-@pytest.mark.order(8)
+@pytest.mark.order(90)
 def test_to_parquet():
     runner = MCToParquet(
         "./tests/Data/Cleanup", "./tests/Data/Parquet", None, None, logger
@@ -145,7 +151,7 @@ def test_to_parquet():
     runner.run()
 
 
-@pytest.mark.order(9)
+@pytest.mark.order(100)
 def test_count_local_freqs():
     runner = MCCountLocalFreqs(
         "./tests/Data/Parquet", "./tests/Data/CountLocalFreqs", None, None, logger
@@ -153,7 +159,7 @@ def test_count_local_freqs():
     runner.run()
 
 
-@pytest.mark.order(10)
+@pytest.mark.order(110)
 def test_to_sqlite():
     runner = MCToSQLite(
         "./tests/Data/CountLocalFreqs/Email",
@@ -192,7 +198,7 @@ def test_to_sqlite():
     runner.run()
 
 
-@pytest.mark.order(11)
+@pytest.mark.order(120)
 def test_merge_freqs():
     runner = MCMergeFreqs(
         "./tests/Data/SQLite/Email",
@@ -213,7 +219,7 @@ def test_merge_freqs():
     runner.run()
 
 
-@pytest.mark.order(12)
+@pytest.mark.order(130)
 def test_concat_personae():
     runner = MCConcatPersonae(
         "./tests/Data/SQLite/Personae", "./tests/Data/SQLite/personae.db", logger
@@ -221,7 +227,7 @@ def test_concat_personae():
     runner.run()
 
 
-@pytest.mark.order(13)
+@pytest.mark.order(140)
 def test_inquire():
     runner = MCInquire(
         "./tests/Data/SQLite/poh_freqs.db",
@@ -241,13 +247,7 @@ def test_inquire():
     assert records[4] == (98765, 63) or records[4] == (123456, 63)
 
 
-@pytest.mark.order(14)
-def test_suggest_chunk_size():
-    runner = MCSuggestChunkSize("./tests/Data/Flatten", 50, logger)
-    assert runner.get() == 100000
-
-
-@pytest.mark.order(100)
+@pytest.mark.order(1000)
 def test_collect_parsing_error_records():
     runner = MCCollectParsingErrorRecords(
         "./tests/Data/Rearchive",
@@ -258,7 +258,7 @@ def test_collect_parsing_error_records():
     runner.run()
 
 
-@pytest.mark.order(101)
+@pytest.mark.order(1010)
 def test_collect_cleanup_error_records():
     runner = MCCollectCleanupErrorRecords(
         "./tests/Data/Parse",
@@ -269,7 +269,7 @@ def test_collect_cleanup_error_records():
     runner.run()
 
 
-@pytest.mark.order(200)
+@pytest.mark.order(2000)
 def test_generate_pseudo_combos():
     runner = MCGeneratePseudoCombos(
         "./Data/rockyou_1M.txt.gz",
