@@ -19,14 +19,14 @@ class MCSuggestChunkSize:
         self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Pick up files at random
-        num_files_to_check_clamped=min(self.__num_files_to_check,len(input_files))
+        num_files_to_check_clamped = min(self.__num_files_to_check, len(input_files))
         files_to_check = random.sample(input_files, num_files_to_check_clamped)
 
         # Get number of lines for each file
         self.__logger.info("Start getting number of lines for each file")
         num_lines: list[int] = []
         for file in tqdm(files_to_check):
-            with file.open("r", encoding="utf-8",errors="replace") as r:
+            with file.open("r", encoding="utf-8", errors="replace") as r:
                 lines = r.read().splitlines()
                 num_lines.append(len(lines))
 
