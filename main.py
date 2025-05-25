@@ -3,6 +3,7 @@ import yaml
 from logging import getLogger, config, Logger
 from subcommands.unarchive import MCUnarchive
 from subcommands.flatten import MCFlatten
+from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.split import MCSplit
 from subcommands.regroup import MCRegroup
 from subcommands.rearchive import MCRearchive
@@ -17,7 +18,6 @@ from subcommands.concat_personae import MCConcatPersonae
 from subcommands.collect_parsing_error_records import MCCollectParsingErrorRecords
 from subcommands.collect_cleanup_error_records import MCCollectCleanupErrorRecords
 from subcommands.inquire import MCInquire
-from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.generate_pseudo_combos import MCGeneratePseudoCombos
 
 
@@ -38,6 +38,11 @@ def flatten(args, logger: Logger):
     runner = MCFlatten(
         args.input_root_dirname, args.output_dirname, args.log_filepath, logger
     )
+    runner.run()
+
+
+def suggest_chunk_size(args, logger: Logger):
+    runner = MCSuggestChunkSize(args.input_dirname, args.num_files_to_check, logger)
     runner.run()
 
 
@@ -194,11 +199,6 @@ def inquire(args, logger: Logger):
     runner.run()
 
 
-def suggest_chunk_size(args, logger: Logger):
-    runner = MCSuggestChunkSize(args.input_dirname, args.num_files_to_check, logger)
-    runner.run()
-
-
 def generate_pseudo_combos(args, logger: Logger):
     runner = MCGeneratePseudoCombos(
         args.word_list_filepath,
@@ -244,6 +244,14 @@ if __name__ == "__main__":
     parser_flatten.add_argument("-o", "--output-dirname", type=str)
     parser_flatten.add_argument("-l", "--log-filepath", type=str)
     parser_flatten.set_defaults(handler=flatten)
+
+    # Suggest chunk size
+    parser_suggest_chunk_size = subparsers.add_parser("suggest-chunk-size")
+    parser_suggest_chunk_size.add_argument("-i", "--input-dirname", type=str)
+    parser_suggest_chunk_size.add_argument(
+        "-n", "--num-files-to-check", type=int, default=50
+    )
+    parser_suggest_chunk_size.set_defaults(handler=suggest_chunk_size)
 
     # Split
     parser_split = subparsers.add_parser("split")
@@ -384,14 +392,6 @@ if __name__ == "__main__":
     parser_inquire.add_argument("--max-num-records-to-print", type=int, default=10)
     parser_inquire.add_argument("--num-records-for-logging", type=int, default=1000000)
     parser_inquire.set_defaults(handler=inquire)
-
-    # Suggest chunk size
-    parser_suggest_chunk_size = subparsers.add_parser("suggest-chunk-size")
-    parser_suggest_chunk_size.add_argument("-i", "--input-dirname", type=str)
-    parser_suggest_chunk_size.add_argument(
-        "-n", "--num-files-to-check", type=int, default=50
-    )
-    parser_suggest_chunk_size.set_defaults(handler=suggest_chunk_size)
 
     # Generate pseudo combos
     parser_generate_pseudo_combos = subparsers.add_parser("generate-pseudo-combos")
