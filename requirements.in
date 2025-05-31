@@ -1,0 +1,9 @@
+black
+pandas
+pgzip
+pyarrow
+pytest
+pytest-order
+PyYAML
+rarfile
+tqdm
