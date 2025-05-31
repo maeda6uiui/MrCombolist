@@ -16,6 +16,10 @@ class MCSuggestChunkSize:
         input_files = list(input_dir.glob("*.txt"))
         input_files.sort()
 
+        if len(input_files) == 0:
+            self.__logger.info("No files exist in the input directory")
+            return 0
+
         self.__logger.info(f"{len(input_files)} files exist in the input directory")
 
         # Pick up files at random
