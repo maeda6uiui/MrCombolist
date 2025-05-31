@@ -1,6 +1,5 @@
 black
 pandas
-pgzip
 pyarrow
 pytest
 pytest-order
