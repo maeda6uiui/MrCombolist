@@ -18,7 +18,7 @@ This is just a hobby project for my free time. :-)
 #### PoH
 
 PoH stands for "Password or Hash".
-Combolists contain hashed passwords as well as plaintext ones.
+Combolists contain hashed strings as well as plaintext ones.
 
 #### Persona
 
