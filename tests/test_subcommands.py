@@ -1,4 +1,5 @@
 import pytest
+import random
 import shutil
 from subcommands.unarchive import MCUnarchive
 from subcommands.flatten import MCFlatten
@@ -22,6 +23,8 @@ from logging import getLogger
 from pathlib import Path
 
 logger = getLogger(__name__)
+
+random.seed(42)
 
 
 @pytest.fixture(scope="session", autouse=True)
