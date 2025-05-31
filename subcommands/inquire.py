@@ -2,6 +2,7 @@ import sqlite3
 from logging import Logger
 from pathlib import Path
 
+
 class MCInquire:
     def __init__(
         self,

@@ -106,7 +106,12 @@ def test_regroup():
 @pytest.mark.order(50)
 def test_rearchive():
     runner = MCRearchive(
-        "./tests/Data/Regroup", "./tests/Data/Rearchive", None, None,"/usr/bin/pigz", logger
+        "./tests/Data/Regroup",
+        "./tests/Data/Rearchive",
+        None,
+        None,
+        "/usr/bin/pigz",
+        logger,
     )
     runner.run()
 
