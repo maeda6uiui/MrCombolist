@@ -109,7 +109,7 @@ class MCUnarchive:
                 if self.__str_endswith_any(
                     input_file.name.lower(), SHUTIL_SUPPORTED_EXTENSIONS
                 ):
-                    shutil.unpack_archive(input_file, output_dir)
+                    shutil.unpack_archive(input_file, output_dir,filter="data")
                 # Files that can be unarchived with the unrar tool
                 elif self.__str_endswith_any(
                     input_file.name.lower(), UNRAR_SUPPORTED_EXTENSIONS
