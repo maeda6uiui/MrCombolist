@@ -27,7 +27,7 @@ After you install uv, just run `uv sync` to set up a virtual environment for thi
 #### PoH
 
 PoH stands for "Password or Hash".
-Combolists contain hashed passwords as well as plaintext ones.
+Combolists contain hashed strings as well as plaintext ones.
 
 #### Persona
 
