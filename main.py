@@ -3,6 +3,7 @@ import yaml
 from logging import getLogger, config, Logger
 from subcommands.unarchive import MCUnarchive
 from subcommands.flatten import MCFlatten
+from subcommands.suggest_chunk_size import MCSuggestChunkSize
 from subcommands.split import MCSplit
 from subcommands.regroup import MCRegroup
 from subcommands.rearchive import MCRearchive
@@ -37,6 +38,11 @@ def flatten(args, logger: Logger):
     runner = MCFlatten(
         args.input_root_dirname, args.output_dirname, args.log_filepath, logger
     )
+    runner.run()
+
+
+def suggest_chunk_size(args, logger: Logger):
+    runner = MCSuggestChunkSize(args.input_dirname, args.num_files_to_check, logger)
     runner.run()
 
 
@@ -238,6 +244,14 @@ if __name__ == "__main__":
     parser_flatten.add_argument("-o", "--output-dirname", type=str)
     parser_flatten.add_argument("-l", "--log-filepath", type=str)
     parser_flatten.set_defaults(handler=flatten)
+
+    # Suggest chunk size
+    parser_suggest_chunk_size = subparsers.add_parser("suggest-chunk-size")
+    parser_suggest_chunk_size.add_argument("-i", "--input-dirname", type=str)
+    parser_suggest_chunk_size.add_argument(
+        "-n", "--num-files-to-check", type=int, default=50
+    )
+    parser_suggest_chunk_size.set_defaults(handler=suggest_chunk_size)
 
     # Split
     parser_split = subparsers.add_parser("split")
