@@ -1,8 +1,0 @@
-black
-pandas
-pyarrow
-pytest
-pytest-order
-PyYAML
-rarfile
-tqdm
