@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from logging import Logger
 from pathlib import Path
@@ -23,14 +24,20 @@ class MCRearchive:
     def __compress_with_pigz(self, input_file: Path, output_file: Path):
         # First, compress the file with pigz
         # and output it in the same directory as the src file
-        result = subprocess.run([self.__pigz_filepath, "-k", str(input_file)])
+        result = subprocess.run(
+            [self.__pigz_filepath, "-k", str(input_file)],
+            capture_output=True,
+            text=True,
+        )
         if result.returncode != 0:
-            self.__logger.error(f"pigz returned code {result.returncode}")
-            raise RuntimeError("pigz error")
+            self.__logger.error(
+                f"pigz returned code {result.returncode}: {result.stderr}"
+            )
+            raise RuntimeError(f"pigz error: {result.stderr}")
 
         # Move the compressed file to the output directory
         tmp_output_file = input_file.with_suffix(".txt.gz")
-        tmp_output_file.rename(output_file)
+        shutil.move(tmp_output_file, output_file)
 
     def run(self):
         # Get all text files in the input directory
