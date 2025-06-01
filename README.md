@@ -9,6 +9,15 @@ This repo is for the scripts to work with combolists and (maybe) for analysis re
 It's subject to frequent change, and I don't have any plans to get it production-ready.
 This is just a hobby project for my free time. :-)
 
+My current objective is to compile large lists of most common passwords.
+
+## Requirements
+
+[uv](https://github.com/astral-sh/uv) is used to manage this project.
+See their readme to find out how to install it.
+
+After you install uv, just run `uv sync` to set up a virtual environment for this project.
+
 ### Operation flow
 
 ![Operation flow](./Image/operation_flow.png)

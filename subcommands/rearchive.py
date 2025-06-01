@@ -1,4 +1,5 @@
-import pgzip
+import shutil
+import subprocess
 from logging import Logger
 from pathlib import Path
 
@@ -10,13 +11,33 @@ class MCRearchive:
         output_dirname: str,
         start_index: int,
         end_index: int,
+        pigz_filepath: str,
         logger: Logger,
     ):
         self.__input_dirname = input_dirname
         self.__output_dirname = output_dirname
         self.__start_index = start_index
         self.__end_index = end_index
+        self.__pigz_filepath = pigz_filepath
         self.__logger = logger
+
+    def __compress_with_pigz(self, input_file: Path, output_file: Path):
+        # First, compress the file with pigz
+        # and output it in the same directory as the src file
+        result = subprocess.run(
+            [self.__pigz_filepath, "-k", str(input_file)],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            self.__logger.error(
+                f"pigz returned code {result.returncode}: {result.stderr}"
+            )
+            raise RuntimeError(f"pigz error: {result.stderr}")
+
+        # Move the compressed file to the output directory
+        tmp_output_file = input_file.with_suffix(".txt.gz")
+        shutil.move(tmp_output_file, output_file)
 
     def run(self):
         # Get all text files in the input directory
@@ -44,10 +65,6 @@ class MCRearchive:
             self.__logger.info(f"Creating archive of {input_file.name}")
 
             output_file = output_dir.joinpath(f"{input_file.name}.gz")
-            with pgzip.open(output_file, "wt", encoding="utf-8") as wt:
-                with input_file.open("r", encoding="utf-8") as r:
-                    for line in r:
-                        line = line.strip()
-                        wt.write(f"{line}\n")
+            self.__compress_with_pigz(input_file, output_file)
 
         self.__logger.info("Finished rearchiving the files")

@@ -75,6 +75,7 @@ def rearchive(args, logger: Logger):
         args.output_dirname,
         args.start_index,
         args.end_index,
+        args.pigz_filepath,
         logger,
     )
     runner.run()
@@ -276,6 +277,7 @@ if __name__ == "__main__":
     parser_rearchive.add_argument("-o", "--output-dirname", type=str)
     parser_rearchive.add_argument("--start-index", type=int)
     parser_rearchive.add_argument("--end-index", type=int)
+    parser_rearchive.add_argument("--pigz-filepath", type=str, default="/usr/bin/pigz")
     parser_rearchive.set_defaults(handler=rearchive)
 
     # Detect schema
